@@ -1,0 +1,12 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: circleci/php:7.2-node-browsers
+
+        steps:
+            - checkout
+            - run: sudo apt update
+            - run: sudo docker-php-ext-install zip
+            - run: php -d memory_limit=-1 $(which composer) install
+            - run: ./vendor/bin/phpunit tests

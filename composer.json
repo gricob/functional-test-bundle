@@ -1,5 +1,5 @@
 {
-    "name": "gerard/symfony-testsuit-bundle",
+    "name": "gricob/symfony-webtest-bundle",
     "description": "Test suit for Symfony projects",
     "authors": [
         {
@@ -7,6 +7,7 @@
             "email": "g.rico.botella@gmail.com"
         }
     ],
+    "license": "MIT",
     "require": {
         "symfony/framework-standard-edition": "^3.4"
     },
@@ -14,6 +15,7 @@
         "symfony/phpunit-bridge": "^4.3",
         "phpunit/phpunit": "^8.4",
         "twig/twig": "^2.12",
+        "doctrine/doctrine-fixtures-bundle": "^3.2"
     },
     "autoload": {
         "psr-4": {
