@@ -1,0 +1,66 @@
+framework:
+    secret: secret
+    test: ~
+    router: { resource: "%kernel.root_dir%/../App/routing.yml" }
+    profiler:
+        collect: false
+    templating:      { engines: ['twig'] }
+    session:
+        handler_id:  ~
+        storage_id: session.storage.mock_file
+        name: MOCKSESSID
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path: "%kernel.cache_dir%/test.db"
+        charset: UTF8
+    orm:
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    TestAppBundle:
+                        type: annotation
+                        dir: "%kernel.root_dir%/../App/Entity"
+                        prefix: 'Tests\App\Entity'
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+
+security:
+    encoders:
+        # in_memory users
+        Symfony\Component\Security\Core\User\User: plaintext
+        # User entity
+        Tests\App\Entity\User: plaintext
+    providers:
+        chain_provider:
+            chain:
+                providers: [main]
+        main:
+            entity: { class: Tests\App\Entity\User, property: id }
+    firewalls:
+        secured_area:
+            pattern:  ^/
+            anonymous: true
+            http_basic:
+                realm: "Admin Area"
+            provider: chain_provider
+    access_control:
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true

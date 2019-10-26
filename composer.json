@@ -1,0 +1,28 @@
+{
+    "name": "gerard/symfony-testsuit-bundle",
+    "description": "Test suit for Symfony projects",
+    "authors": [
+        {
+            "name": "Gerard Rico Botella",
+            "email": "g.rico.botella@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-standard-edition": "^3.4"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.3",
+        "phpunit/phpunit": "^8.4",
+        "twig/twig": "^2.12",
+    },
+    "autoload": {
+        "psr-4": {
+            "Gricob\\SymfonyWebTestBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}

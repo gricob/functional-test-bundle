@@ -1,0 +1,21 @@
+test_get:
+    path:  /get-uri
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::getAction' }
+    methods: GET
+
+test_post:
+    path:  /post-uri
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::postAction' }
+    methods: POST
+
+test_redirect:
+    path:  /redirect-uri
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::redirectAction' }
+
+test_user:
+    path: /user
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::userAction' }
+
+test_exception:
+    path: /exception
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::exceptionAction' }
