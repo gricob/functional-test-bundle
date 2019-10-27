@@ -47,11 +47,11 @@ trait InteractsWithDatabase
         $this->schemaTool->dropDatabase();
     }
 
-    protected function loadFixtures($fixtureClasses): void
+    protected function loadFixtures($fixtureClasses, $append = true): void
     {
         $loader = $this->getFixtureLoader($fixtureClasses);
 
-        $this->executor->execute($loader->getFixtures());
+        $this->executor->execute($loader->getFixtures(), $append);
     }
 
     protected function getFixtureLoader(array $fixtureClasses)
