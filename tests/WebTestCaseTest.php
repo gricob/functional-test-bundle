@@ -2,11 +2,13 @@
 
 namespace Tests;
 
+use Exception;
+use Gricob\SymfonyWebTestBundle\Testing\RefreshDatabase;
+use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
+use OutOfBoundsException;
+use Symfony\Component\DependencyInjection\Container;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
-use Symfony\Component\DependencyInjection\Container;
-use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
-use Gricob\SymfonyWebTestBundle\Testing\RefreshDatabase;
 
 class WebTestCaseTest extends WebTestCase
 {
@@ -68,7 +70,7 @@ class WebTestCaseTest extends WebTestCase
 
     public function testRequestWithoutExceptionHandling()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Something went wrong!');
 
         $this->get('/exception');
@@ -77,6 +79,37 @@ class WebTestCaseTest extends WebTestCase
     public function testRequestWithExceptionHandling()
     {
         $this->catchExceptions()->get('/exception')->assertStatusCode(500);
+    }
+
+    public function testRunCommand()
+    {
+        $this->runCommand('test:command')
+            ->assertOk()
+            ->assertSee('Hello from test:command');
+    }
+
+    public function testRunCommandWithInputs()
+    {
+        $this->runCommand('test:command', ['shouldAsk'], ['testing'])
+            ->assertOk()
+            ->assertSee('You are testing');
+    }
+
+    public function testRunCommandFails()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Test command failed');
+
+        $this->runCommand('test:command', ['shouldFail'])->assertOk();
+    }
+
+    public function testInvalidVerbosityThrowException()
+    {
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('The verbosity level [13] is invalid. 
+                Use VerbosityLevel class constants to prevent invalid verbosity level');
+
+        $this->setVerbosityLevel(13);
     }
 
     public function testGetContainer()
