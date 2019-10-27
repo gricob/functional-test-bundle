@@ -65,3 +65,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+    test.command:
+        class: 'Tests\App\Command\TestCommand'
+        tags:
+            - { name: console.command }

@@ -6,7 +6,11 @@ jobs:
 
         steps:
             - checkout
-            - run: sudo apt update
-            - run: sudo docker-php-ext-install zip
-            - run: php -d memory_limit=-1 $(which composer) install
-            - run: ./vendor/bin/phpunit tests
+            -   run:
+                    name: "Install dependencies"
+                    command: sudo apt update && sudo docker-php-ext-install zip && php -d memory_limit=-1 $(which composer) install
+            -   run:
+                    name: "Run tests"
+                    command: ./vendor/bin/phpunit --coverage-html build/coverage-reports --whitelist src tests
+            -   store_artifacts:
+                    path: build/coverage-reports

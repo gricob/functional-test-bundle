@@ -1,3 +1,5 @@
 /vendor/
 /tests/App/cache
+/tests/App/logs
 .idea/
+/build
