@@ -80,7 +80,7 @@ trait MakesHttpRequests
         return $response;
     }
 
-    protected function loginAs(UserInterface $user, string $firewall = 'user'): self
+    protected function loginAs(UserInterface $user, string $firewall = 'secured_area'): self
     {
         $this->firewallLogins[$firewall] = $user;
 
@@ -115,7 +115,7 @@ trait MakesHttpRequests
                 $token = $this->createUserToken($user, $firewallName);
                 $tokenStorage = $this->client->getContainer()->get('security.token_storage');
                 $tokenStorage->setToken($token);
-                $session->set('_security_secured_area', serialize($token));
+                $session->set('_security_' . $firewallName, serialize($token));
             }
 
             $session->save();
