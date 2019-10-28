@@ -13,24 +13,12 @@ composer require --dev gricob/symfony-webtest-bundle
 
 ### Usage
 
-#### Add bundle to TestKernel
-
-```php
-public function registerBundles()
-{
-    return [
-        // ...
-        new SymfonyWebTestBundle(),
-    ];
-}
-```
-
 #### Extend the WebTestCase
 
 ```php
 use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
 
-class WebTestCaseTest extends WebTestCase
+class FunctionalTestCase extends WebTestCase
 {
     //
 }
