@@ -2,9 +2,10 @@
 
 namespace Gricob\SymfonyWebTestBundle\Concerns;
 
+use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
-use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
+use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -48,6 +49,7 @@ trait MakesHttpRequests
         }
 
         $this->client->catchExceptions($this->catchExceptions);
+        $this->client->followRedirects($this->followRedirects);
 
         $crawler = $this->client->request($method, $uri, $parameters);
 
@@ -62,22 +64,18 @@ trait MakesHttpRequests
         return $response;
     }
 
+    protected function submit(Form $form, array $values = []): TestResponse
+    {
+        $form->setValues($values);
+
+        return $this->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+    }
+
     protected function followingRedirects(): self
     {
         $this->followRedirects = true;
 
         return $this;
-    }
-
-    protected function followRedirects(TestResponse $response): TestResponse
-    {
-        while($response->isRedirect()) {
-            $response = $this->get($response->headers->get('Location'));
-        }
-
-        $this->followRedirects = false;
-
-        return $response;
     }
 
     protected function loginAs(UserInterface $user, string $firewall = 'user'): self
