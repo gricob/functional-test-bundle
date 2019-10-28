@@ -56,10 +56,7 @@ trait MakesHttpRequests
         $response = TestResponse::fromBaseResponse($this->client->getResponse(), $crawler);
 
         $this->catchExceptions = false;
-
-        if($this->followRedirects) {
-            $response = $this->followRedirects($response);
-        }
+        $this->followRedirects = false;
 
         return $response;
     }
