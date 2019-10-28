@@ -2,6 +2,7 @@
 
 namespace Gricob\SymfonyWebTestBundle\Testing;
 
+use Gricob\SymfonyWebTestBundle\Support\Arr;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,6 +100,22 @@ class TestResponse
         PHPUnit::assertStringNotContainsString($needle, $this->baseResponse->getContent());
 
         return $this;
+    }
+
+    public function assertExactJson(array $data): self
+    {
+        $actual = json_encode(Arr::sortRecursive(
+            (array)$this->decodeResponseJson()
+        ));
+
+        PHPUnit::assertEquals(json_encode(Arr::sortRecursive($data)), $actual);
+
+        return $this;
+    }
+
+    public function decodeResponseJson(bool $assoc = true)
+    {
+        return json_decode($this->baseResponse->getContent(), $assoc);
     }
 
     public function __get($name)

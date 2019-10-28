@@ -83,6 +83,7 @@ $response->assertForbidden();
 $response->assertUnauthorized();
 $response->assertSee('Assert that response content has this text');
 $response->assertDontSee('Assert that response content does not have this text');
+$response->assertExactJson(['id' => 30, 'name' => 'dummy']);
 ```
 
 ## Interacting with database

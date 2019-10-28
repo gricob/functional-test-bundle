@@ -2,12 +2,12 @@
 
 namespace Tests;
 
+use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
 
 class TestResponseTest extends TestCase
 {
@@ -68,6 +68,25 @@ class TestResponseTest extends TestCase
         TestResponse::fromBaseResponse(Response::create('Test text in response'))
             ->assertSee('text in')
             ->assertDontSee('text not in');
+    }
+
+    public function testAssertExactJson()
+    {
+        TestResponse::fromBaseResponse(Response::create(
+            json_encode([
+                'key1' => 'Key 1',
+                'key2' => [
+                    10,
+                    30
+                ]
+            ])))
+            ->assertExactJson([
+                'key2' => [
+                    30,
+                    10
+                ],
+                'key1' => 'Key 1'
+            ]);
     }
 
     public function testGetCrawler()
