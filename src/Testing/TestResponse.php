@@ -90,14 +90,14 @@ class TestResponse
 
     public function assertSee(string $needle): self
     {
-        PHPUnit::assertStringContainsString($needle, $this->baseResponse->getContent());
+        PHPUnit::assertContains($needle, $this->baseResponse->getContent());
 
         return $this;
     }
 
     public function assertDontSee(string $needle): self
     {
-        PHPUnit::assertStringNotContainsString($needle, $this->baseResponse->getContent());
+        PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
 
         return $this;
     }
