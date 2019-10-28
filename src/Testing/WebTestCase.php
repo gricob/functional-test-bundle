@@ -2,15 +2,17 @@
 
 namespace Gricob\SymfonyWebTestBundle\Testing;
 
-use Symfony\Component\DependencyInjection\Container;
-use Gricob\SymfonyWebTestBundle\Concerns\MakesHttpRequests;
+use Gricob\SymfonyWebTestBundle\Concerns\InteractsWithConsole;
 use Gricob\SymfonyWebTestBundle\Concerns\InteractsWithDatabase;
+use Gricob\SymfonyWebTestBundle\Concerns\MakesHttpRequests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
+use Symfony\Component\DependencyInjection\Container;
 
 class WebTestCase extends BaseWebTestCase
 {
     use MakesHttpRequests,
-        InteractsWithDatabase;
+        InteractsWithDatabase,
+        InteractsWithConsole;
 
     /**
      * @var array
