@@ -13,7 +13,7 @@ composer require --dev gricob/symfony-webtest-bundle
 
 ### Usage
 
-#### Extend the WebTestCase
+#### Extend WebTestCase
 
 ```php
 use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
