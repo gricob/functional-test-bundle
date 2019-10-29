@@ -1,8 +1,8 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Testing;
+namespace Gricob\FunctionalTestBundle\Testing;
 
-use Gricob\SymfonyWebTestBundle\Support\Arr;
+use Gricob\FunctionalTestBundle\Support\Arr;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;

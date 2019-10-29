@@ -1,6 +1,6 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Concerns;
+namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\Persistence\ObjectManager;

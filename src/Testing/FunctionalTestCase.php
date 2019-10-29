@@ -1,14 +1,14 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Testing;
+namespace Gricob\FunctionalTestBundle\Testing;
 
-use Gricob\SymfonyWebTestBundle\Concerns\InteractsWithConsole;
-use Gricob\SymfonyWebTestBundle\Concerns\InteractsWithDatabase;
-use Gricob\SymfonyWebTestBundle\Concerns\MakesHttpRequests;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithConsole;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
+use Gricob\FunctionalTestBundle\Concerns\MakesHttpRequests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
-class WebTestCase extends BaseWebTestCase
+class FunctionalTestCase extends BaseWebTestCase
 {
     use MakesHttpRequests,
         InteractsWithDatabase,

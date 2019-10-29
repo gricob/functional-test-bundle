@@ -1,6 +1,6 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Support;
+namespace Gricob\FunctionalTestBundle\Support;
 
 class Arr
 {

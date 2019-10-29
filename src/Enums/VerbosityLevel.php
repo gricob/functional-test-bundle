@@ -1,6 +1,6 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Enums;
+namespace Gricob\FunctionalTestBundle\Enums;
 
 class VerbosityLevel
 {

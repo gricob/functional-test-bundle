@@ -3,14 +3,14 @@
 namespace Tests;
 
 use Exception;
-use Gricob\SymfonyWebTestBundle\Testing\RefreshDatabase;
-use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
+use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
+use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use OutOfBoundsException;
 use Symfony\Component\DependencyInjection\Container;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
 
-class WebTestCaseTest extends WebTestCase
+class FunctionalTestCaseTest extends FunctionalTestCase
 {
     use RefreshDatabase;
 

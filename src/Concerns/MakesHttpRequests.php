@@ -1,8 +1,8 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Concerns;
+namespace Gricob\FunctionalTestBundle\Concerns;
 
-use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
+use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;

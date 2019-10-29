@@ -7,7 +7,7 @@ This Bundle provides base classes for functional tests on Symfony
 ### Installation
 
 ```bash
-composer require --dev gricob/symfony-webtest-bundle
+composer require --dev gricob/functional-test-bundle
 ```
 
 
@@ -16,7 +16,7 @@ composer require --dev gricob/symfony-webtest-bundle
 #### Extend WebTestCase
 
 ```php
-use Gricob\SymfonyWebTestBundle\Testing\WebTestCase;
+use Gricob\FunctionalTestBundle\Testing\WebTestCase;
 
 class FunctionalTestCase extends WebTestCase
 {

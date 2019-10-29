@@ -9,7 +9,7 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Gricob\SymfonyWebTestBundle\SymfonyWebTestBundle;
+use Gricob\FunctionalTestBundle\FunctionalTestBundle;
 
 class AppKernel extends Kernel
 {
@@ -21,7 +21,7 @@ class AppKernel extends Kernel
             new TwigBundle(),
             new SecurityBundle(),
             new DoctrineBundle(),
-            new SymfonyWebTestBundle(),
+            new FunctionalTestBundle(),
             new TestAppBundle(),
         ];
     }

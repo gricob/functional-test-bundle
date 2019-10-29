@@ -1,6 +1,6 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Testing;
+namespace Gricob\FunctionalTestBundle\Testing;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
