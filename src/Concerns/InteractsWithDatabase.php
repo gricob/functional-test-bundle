@@ -2,6 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle\Concerns;
 
+use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -27,7 +28,7 @@ trait InteractsWithDatabase
      */
     protected $schemaTool;
 
-    protected function setUpInteractsWithDatabase()
+    protected function setUpInteractsWithDatabase(): void
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
 
@@ -54,7 +55,7 @@ trait InteractsWithDatabase
         $this->executor->execute($loader->getFixtures(), $append);
     }
 
-    protected function getFixtureLoader(array $fixtureClasses)
+    protected function getFixtureLoader(array $fixtureClasses): Loader
     {
         $loader = new ContainerAwareLoader($this->getContainer());
 
@@ -65,7 +66,7 @@ trait InteractsWithDatabase
         return $loader;
     }
 
-    protected function loadFixtureClass(ContainerAwareLoader $loader, string $className)
+    protected function loadFixtureClass(ContainerAwareLoader $loader, string $className): void
     {
         $fixture = null;
 
@@ -90,7 +91,7 @@ trait InteractsWithDatabase
         }
     }
 
-    protected function getReference(string $ref): object
+    protected function getReference(string $ref)
     {
         return $this->executor->getReferenceRepository()->getReference($ref);
     }
