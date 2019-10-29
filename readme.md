@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/gricob/symfony-webtest-bundle.svg?style=svg)](https://circleci.com/gh/gricob/symfony-webtest-bundle)
+[![CircleCI](https://circleci.com/gh/gricob/functional-test-bundle/tree/master.svg?style=svg)](https://circleci.com/gh/gricob/functional-test-bundle/tree/master)
 
 ## Introduction
 
