@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "symfony/framework-standard-edition": "^3.4"
+        "symfony/framework-bundle": "^4.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.3",
