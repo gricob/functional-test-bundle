@@ -1,9 +1,9 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Concerns;
+namespace Gricob\FunctionalTestBundle\Concerns;
 
-use Gricob\SymfonyWebTestBundle\Enums\VerbosityLevel;
-use Gricob\SymfonyWebTestBundle\Testing\CommandResult;
+use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
+use Gricob\FunctionalTestBundle\Testing\CommandResult;
 use OutOfBoundsException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;

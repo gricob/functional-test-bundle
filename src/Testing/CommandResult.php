@@ -1,6 +1,6 @@
 <?php
 
-namespace Gricob\SymfonyWebTestBundle\Testing;
+namespace Gricob\FunctionalTestBundle\Testing;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -34,7 +34,7 @@ class CommandResult
 
     public function assertSee(string $needle): self
     {
-        PHPUnit::assertStringContainsString(
+        PHPUnit::assertContains(
             $needle,
             $this->commandTester->getDisplay()
         );

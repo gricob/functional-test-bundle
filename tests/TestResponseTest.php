@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Gricob\SymfonyWebTestBundle\Testing\TestResponse;
+use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;

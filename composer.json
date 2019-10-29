@@ -1,5 +1,5 @@
 {
-    "name": "gricob/symfony-webtest-bundle",
+    "name": "gricob/functional-test-bundle",
     "description": "Test suit for Symfony projects",
     "authors": [
         {
@@ -13,13 +13,13 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.3",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^6.0",
         "twig/twig": "^2.12",
         "doctrine/doctrine-fixtures-bundle": "^3.2"
     },
     "autoload": {
         "psr-4": {
-            "Gricob\\SymfonyWebTestBundle\\": "src/"
+            "Gricob\\FunctionalTestBundle\\": "src/"
         }
     },
     "autoload-dev": {
