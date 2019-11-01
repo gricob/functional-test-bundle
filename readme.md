@@ -17,9 +17,9 @@ composer require --dev gricob/functional-test-bundle
 #### Extend WebTestCase
 
 ```php
-use Gricob\FunctionalTestBundle\Testing\WebTestCase;
+use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase as TestCase;
 
-class FunctionalTestCase extends WebTestCase
+class FunctionalTestCase extends TestCase
 {
     //
 }
