@@ -17,7 +17,8 @@
         "symfony/phpunit-bridge": "^4.3",
         "phpunit/phpunit": "^6.0",
         "twig/twig": "^2.12",
-        "doctrine/doctrine-fixtures-bundle": "^3.2"
+        "doctrine/doctrine-fixtures-bundle": "^3.2",
+        "illuminate/support": "^6.4"
     },
     "autoload": {
         "psr-4": {

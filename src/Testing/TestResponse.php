@@ -2,7 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle\Testing;
 
-use Gricob\FunctionalTestBundle\Support\Arr;
+use Illuminate\Support\Arr;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
