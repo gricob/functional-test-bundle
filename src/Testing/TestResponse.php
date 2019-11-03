@@ -4,8 +4,12 @@ namespace Gricob\FunctionalTestBundle\Testing;
 
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Symfony\Bridge\Twig\DataCollector\TwigDataCollector;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Profiler\Profile;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class TestResponse
 {
@@ -20,27 +24,41 @@ class TestResponse
     private $crawler;
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * TestResponse constructor.
      * @param Response $baseResponse
-     * @param Crawler $crawler
      */
-    protected function __construct(Response $baseResponse, Crawler $crawler = null)
+    protected function __construct(Response $baseResponse)
     {
         $this->baseResponse = $baseResponse;
-        $this->crawler = $crawler;
     }
 
-    public static function fromBaseResponse(Response $baseResponse, Crawler $crawler = null)
+    public static function fromBaseResponse(Response $baseResponse)
     {
-        return new static($baseResponse, $crawler);
+        return new static($baseResponse);
     }
 
     /**
-     * @return Crawler|null Crawler
+     * @return null|Crawler
      */
     public function getCrawler(): ?Crawler
     {
         return $this->crawler;
+    }
+
+    /**
+     * @param Crawler $crawler
+     * @return TestResponse
+     */
+    public function setCrawler(Crawler $crawler): self
+    {
+        $this->crawler = $crawler;
+
+        return $this;
     }
 
     public function assertOk(): self
@@ -116,6 +134,54 @@ class TestResponse
     public function decodeResponseJson(bool $assoc = true)
     {
         return json_decode($this->baseResponse->getContent(), $assoc);
+    }
+
+    public function assertViewIs(string $expectedView)
+    {
+        $collector = $this->getTwigCollector();
+
+        $template = array_key_first($collector->getTemplates());
+
+        PHPUnit::assertEquals(
+            $expectedView,
+            $template,
+            "Actual view [$template] does not match expected view [$expectedView]"
+        );
+    }
+
+    protected function getTwigCollector(): TwigDataCollector
+    {
+        return $this->getProfile()->getCollector('twig');
+    }
+
+    protected function getProfile(): Profile
+    {
+        if(!$this->getContainer()->has('profiler')) {
+            PHPUnit::fail('Profiler is not initialized');
+        }
+
+        $profiler = $this->getContainer()->get('profiler');
+
+        return $profiler->loadProfileFromResponse($this->baseResponse);
+    }
+
+    /**
+     * @return null|Container
+     */
+    public function getContainer(): ?Container
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     * @return TestResponse
+     */
+    public function setContainer(Container $container): self
+    {
+        $this->container = $container;
+
+        return $this;
     }
 
     public function __get($name)
