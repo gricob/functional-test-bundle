@@ -91,7 +91,7 @@ class TestResponseTest extends TestCase
 
     public function testGetCrawler()
     {
-        $testResponse = TestResponse::fromBaseResponse(Response::create(''), new Crawler());
+        $testResponse = TestResponse::fromBaseResponse(Response::create(''))->setCrawler(new Crawler());
 
         $this->assertInstanceOf(Crawler::class, $testResponse->getCrawler());
     }

@@ -53,12 +53,12 @@ trait MakesHttpRequests
 
         $crawler = $this->client->request($method, $uri, $parameters);
 
-        $response = TestResponse::fromBaseResponse($this->client->getResponse(), $crawler);
-
         $this->catchExceptions = false;
         $this->followRedirects = false;
 
-        return $response;
+        return TestResponse::fromBaseResponse($this->client->getResponse())
+            ->setCrawler($crawler)
+            ->setContainer($this->getContainer());
     }
 
     protected function submit(Form $form, array $values = []): TestResponse

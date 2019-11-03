@@ -2,12 +2,12 @@
 
 namespace Tests\App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
     public function getAction(Request $request)
     {
@@ -32,5 +32,10 @@ class DefaultController extends Controller
     public function exceptionAction()
     {
         throw new \Exception('Something went wrong!');
+    }
+
+    public function viewAction()
+    {
+        return $this->render('test.twig.html');
     }
 }

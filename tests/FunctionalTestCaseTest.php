@@ -6,6 +6,7 @@ use Exception;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use OutOfBoundsException;
+use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\DependencyInjection\Container;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
@@ -110,6 +111,19 @@ class FunctionalTestCaseTest extends FunctionalTestCase
                 Use VerbosityLevel class constants to prevent invalid verbosity level');
 
         $this->setVerbosityLevel(13);
+    }
+
+    public function testAssertViewIs()
+    {
+        $this->get('/view')->assertViewIs('test.twig.html');
+    }
+
+    public function testAssertViewIsFails()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('Actual view [test.twig.html] does not match expected view [other-view.twig.html]');
+
+        $this->get('/view')->assertViewIs('other-view.twig.html');
     }
 
     public function testGetContainer()

@@ -22,7 +22,6 @@ class AppKernel extends Kernel
             new SecurityBundle(),
             new DoctrineBundle(),
             new FunctionalTestBundle(),
-            new TestAppBundle(),
         ];
     }
 

@@ -3,7 +3,8 @@ framework:
     test: ~
     router: { resource: "%kernel.root_dir%/../App/routing.yml" }
     profiler:
-        collect: false
+        only_exceptions: false
+        collect: true
     session:
         handler_id:  ~
         storage_id: session.storage.mock_file
@@ -11,6 +12,7 @@ framework:
 
 twig:
     strict_variables: "%kernel.debug%"
+    paths: ["%kernel.root_dir%/../App/templates"]
 
 doctrine:
     dbal:
@@ -70,3 +72,6 @@ services:
         class: 'Tests\App\Command\TestCommand'
         tags:
             - { name: console.command }
+    Tests\App\Controller\DefaultController:
+        calls:
+            - ['setContainer', ['@service_container']]
