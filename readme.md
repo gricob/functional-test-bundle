@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/gricob/functional-test-bundle/tree/master.svg?style=svg)](https://circleci.com/gh/gricob/functional-test-bundle/tree/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/badges/quality-score.png?b=feature/scrutinizer)](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/?branch=feature/scrutinizer)
-[![Code Coverage](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/badges/coverage.png?b=feature/scrutinizer)](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/?branch=feature/scrutinizer)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/gricob/functional-test-bundle/?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/gricob/functional-test-bundle/badge)](https://www.codefactor.io/repository/github/gricob/functional-test-bundle)
 
 ## Introduction
