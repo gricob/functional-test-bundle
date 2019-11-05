@@ -70,6 +70,48 @@ class TestResponseTest extends TestCase
             ->assertDontSee('text not in');
     }
 
+    public function testAssertSeeAll()
+    {
+        TestResponse::fromBaseResponse(Response::create('Test text in response'))
+            ->assertSeeAll([
+                'text',
+                'response'
+            ]);
+    }
+
+    public function testAssertSeeAllFails()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("Failed asserting that 'Test text in response' contains \"this does not exists\"");
+
+        TestResponse::fromBaseResponse(Response::create('Test text in response'))
+            ->assertSeeAll([
+                'text',
+                'this does not exists'
+            ]);
+    }
+
+    public function testAssertDontSeeAny()
+    {
+        TestResponse::fromBaseResponse(Response::create('Test text in response'))
+            ->assertDontSeeAny([
+                'this does not exists',
+                'this one neither'
+            ]);
+    }
+
+    public function testAssertDontSeeAnyFails()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("Failed asserting that 'Test text in response' does not contain \"text\"");
+
+        TestResponse::fromBaseResponse(Response::create('Test text in response'))
+            ->assertDontSeeAny([
+                'text',
+                'this does not exists'
+            ]);
+    }
+
     public function testAssertExactJson()
     {
         TestResponse::fromBaseResponse(Response::create(

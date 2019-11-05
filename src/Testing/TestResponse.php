@@ -113,9 +113,27 @@ class TestResponse
         return $this;
     }
 
+    public function assertSeeAll(array $needles): self
+    {
+        foreach($needles as $needle) {
+            PHPUnit::assertContains($needle, $this->baseResponse->getContent());
+        }
+
+        return $this;
+    }
+
     public function assertDontSee(string $needle): self
     {
         PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
+
+        return $this;
+    }
+
+    public function assertDontSeeAny(array $needles)
+    {
+        foreach($needles as $needle) {
+            PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
+        }
 
         return $this;
     }
