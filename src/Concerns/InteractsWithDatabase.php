@@ -2,14 +2,16 @@
 
 namespace Gricob\FunctionalTestBundle\Concerns;
 
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Symfony\Component\DependencyInjection\Container;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Tools\SchemaTool;
+use Gricob\FunctionalTestBundle\Enums\Events;
+use Gricob\FunctionalTestBundle\Event\SchemaEvent;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use Symfony\Component\DependencyInjection\Container;
 
 trait InteractsWithDatabase
 {
@@ -33,19 +35,43 @@ trait InteractsWithDatabase
         $this->em = $this->getContainer()->get('doctrine')->getManager();
 
         $this->executor = new ORMExecutor($this->em, new ORMPurger($this->em));
+
+        $this->schemaTool = new SchemaTool($this->em);
     }
 
     protected function createDatabaseSchema(): void
     {
-        $metadatas = $this->em->getMetadataFactory()->getAllMetadata();
+        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $event = new SchemaEvent($this->em);
 
-        $this->schemaTool = new SchemaTool($this->em);
-        $this->schemaTool->createSchema($metadatas);
+        $dispatcher->dispatch($event, Events::PRE_CREATE_SCHEMA);
+
+        if ($event->isLoaded()) {
+            return;
+        }
+
+        $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
+
+        $dispatcher->dispatch($event, Events::POST_CREATE_SCHEMA);
     }
 
     protected function dropDatabaseSchema(): void
     {
         $this->schemaTool->dropDatabase();
+    }
+
+    protected function createDatabaseBackup(): void
+    {
+        copy($this->em->getConnection()->getDatabase(), $this->backupFile);
+    }
+
+    protected function loadDatabaseBackup(): bool
+    {
+        if (file_exists($this->backupFile)) {
+            return copy($this->backupFile, $this->em->getConnection()->getDatabase());
+        }
+
+        return false;
     }
 
     protected function loadFixtures($fixtureClasses, $append = true): void
