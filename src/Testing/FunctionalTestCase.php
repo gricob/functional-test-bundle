@@ -40,7 +40,17 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function setUpTraits(): void
     {
-        foreach($this->getUsedTraits() as $trait) {
+        $traits = $this->getUsedTraits();
+
+        if(isset($traits[InteractsWithDatabase::class]) and isset($traits[RefreshDatabase::class])) {
+            $this->setUpInteractsWithDatabase();
+            $this->setUpRefreshDatabase();
+
+            unset($traits[InteractsWithDatabase::class]);
+            unset($traits[RefreshDatabase::class]);
+        }
+
+        foreach($traits as $trait) {
             $traitName = ($aux = explode('\\', $trait))[count($aux) - 1];
 
             $setUpMethod = 'setUp' . ucfirst($traitName);
@@ -73,6 +83,8 @@ class FunctionalTestCase extends BaseWebTestCase
         do {
             $traits = array_merge($traits, class_uses($class));
         } while($class = get_parent_class($class));
+
+        $traits = array_combine($traits, $traits);
 
         return array_reverse($traits);
     }
