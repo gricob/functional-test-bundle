@@ -22,16 +22,17 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @return int|null
+     * @var string
+     *
+     * @ORM\Column(type="string")
      */
+    private $username;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
     public function setId($id): void
     {
         $this->id = $id;
@@ -49,31 +50,21 @@ class User implements UserInterface
         return 'password';
     }
 
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
     }
 
-    public function getUsername()
+    public function getUsername(): ?string
     {
-        return 'user';
+        return $this->username;
     }
 
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 }

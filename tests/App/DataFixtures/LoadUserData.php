@@ -14,6 +14,7 @@ class LoadUserData extends Fixture
     {
         $user = new User();
         $user->setId(1);
+        $user->setUsername('john');
 
         $manager->persist($user);
         $manager->flush();
