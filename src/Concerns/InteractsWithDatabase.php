@@ -6,10 +6,13 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Gricob\FunctionalTestBundle\Constraints\HasInDatabase;
 use Symfony\Component\DependencyInjection\Container;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\Constraint\LogicalNot as ReverseConstraint;
 
 trait InteractsWithDatabase
 {
@@ -94,6 +97,20 @@ trait InteractsWithDatabase
     protected function getReference(string $ref)
     {
         return $this->executor->getReferenceRepository()->getReference($ref);
+    }
+
+    protected function assertDatabaseHas(string $entityClass, array $data)
+    {
+        PHPUnit::assertThat($entityClass, new HasInDatabase($this->em, $data));
+    }
+
+    protected function assertDatabaseMissing(string $entityClass, array $data)
+    {
+        $constraint = new ReverseConstraint(
+            new HasInDatabase($this->em, $data)
+        );
+
+        PHPUnit::assertThat($entityClass, $constraint);
     }
 
     abstract protected function getContainer(): Container;

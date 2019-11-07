@@ -42,7 +42,7 @@ class FunctionalTestCase extends BaseWebTestCase
     {
         $traits = $this->getUsedTraits();
 
-        if(isset($traits[InteractsWithDatabase::class]) and isset($traits[RefreshDatabase::class])) {
+        if (isset($traits[InteractsWithDatabase::class]) and isset($traits[RefreshDatabase::class])) {
             $this->setUpInteractsWithDatabase();
             $this->setUpRefreshDatabase();
 
@@ -50,12 +50,12 @@ class FunctionalTestCase extends BaseWebTestCase
             unset($traits[RefreshDatabase::class]);
         }
 
-        foreach($traits as $trait) {
+        foreach ($traits as $trait) {
             $traitName = ($aux = explode('\\', $trait))[count($aux) - 1];
 
             $setUpMethod = 'setUp' . ucfirst($traitName);
 
-            if(method_exists($this, $setUpMethod)) {
+            if (method_exists($this, $setUpMethod)) {
                 $this->{$setUpMethod}();
             }
         }
@@ -63,12 +63,12 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function tearDownTraits(): void
     {
-        foreach($this->getUsedTraits() as $trait) {
+        foreach ($this->getUsedTraits() as $trait) {
             $traitName = ($aux = explode('\\', $trait))[count($aux) - 1];
 
             $setUpMethod = 'tearDown' . ucfirst($traitName);
 
-            if(method_exists($this, $setUpMethod)) {
+            if (method_exists($this, $setUpMethod)) {
                 $this->{$setUpMethod}();
             }
         }
@@ -82,7 +82,7 @@ class FunctionalTestCase extends BaseWebTestCase
 
         do {
             $traits = array_merge($traits, class_uses($class));
-        } while($class = get_parent_class($class));
+        } while ($class = get_parent_class($class));
 
         $traits = array_combine($traits, $traits);
 
@@ -105,7 +105,7 @@ class FunctionalTestCase extends BaseWebTestCase
     {
         $env = $this->getEnvironment();
 
-        if(!isset($this->containers[$env])) {
+        if (!isset($this->containers[$env])) {
             $kernel = $this->bootKernel($this->getKernelOptions());
 
             $this->containers[$env] = $kernel->getContainer();
