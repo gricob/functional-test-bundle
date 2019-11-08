@@ -2,3 +2,4 @@
 .idea/
 /build
 var/
+.php_cs.cache

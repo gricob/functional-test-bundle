@@ -2,14 +2,19 @@
 
 namespace Gricob\FunctionalTestBundle\Concerns;
 
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Symfony\Component\DependencyInjection\Container;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Tools\SchemaTool;
+use Gricob\FunctionalTestBundle\Enums\Events;
+use Gricob\FunctionalTestBundle\Event\SchemaEvent;
+use Gricob\FunctionalTestBundle\Constraints\HasInDatabase;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\Constraint\LogicalNot as ReverseConstraint;
 
 trait InteractsWithDatabase
 {
@@ -33,14 +38,24 @@ trait InteractsWithDatabase
         $this->em = $this->getContainer()->get('doctrine')->getManager();
 
         $this->executor = new ORMExecutor($this->em, new ORMPurger($this->em));
+
+        $this->schemaTool = new SchemaTool($this->em);
     }
 
     protected function createDatabaseSchema(): void
     {
-        $metadatas = $this->em->getMetadataFactory()->getAllMetadata();
+        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $event = new SchemaEvent($this->em);
 
-        $this->schemaTool = new SchemaTool($this->em);
-        $this->schemaTool->createSchema($metadatas);
+        $dispatcher->dispatch($event, Events::PRE_CREATE_SCHEMA);
+
+        if ($event->isLoaded()) {
+            return;
+        }
+
+        $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
+
+        $dispatcher->dispatch($event, Events::POST_CREATE_SCHEMA);
     }
 
     protected function dropDatabaseSchema(): void
@@ -94,6 +109,20 @@ trait InteractsWithDatabase
     protected function getReference(string $ref)
     {
         return $this->executor->getReferenceRepository()->getReference($ref);
+    }
+
+    protected function assertDatabaseHas(string $entityClass, array $data)
+    {
+        PHPUnit::assertThat($entityClass, new HasInDatabase($this->em, $data));
+    }
+
+    protected function assertDatabaseMissing(string $entityClass, array $data)
+    {
+        $constraint = new ReverseConstraint(
+            new HasInDatabase($this->em, $data)
+        );
+
+        PHPUnit::assertThat($entityClass, $constraint);
     }
 
     abstract protected function getContainer(): Container;

@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Component\DependencyInjection\Container;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
+use Tests\App\Entity\User;
 
 class FunctionalTestCaseTest extends FunctionalTestCase
 {
@@ -125,6 +126,46 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $this->expectExceptionMessage('Actual view [test.twig.html] does not match expected view [other-view.twig.html]');
 
         $this->get('/view')->assertViewIs('other-view.twig.html');
+    }
+
+    public function testAssertDatabaseHas()
+    {
+        $this->loadFixtures([LoadUserData::class]);
+
+        $this->assertDatabaseHas(User::class, [
+            'username' => 'john'
+        ]);
+    }
+
+    public function testAssertDatabaseHasFails()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("Failed asserting that a row of [Tests\App\Entity\User] table matches the attributes {\n    \"username\": \"john\"\n}..");
+
+        $this->assertDatabaseHas(User::class, [
+            'username' => 'john'
+        ]);
+    }
+
+    public function testAssertDatabaseMissing()
+    {
+        $this->loadFixtures([LoadUserData::class]);
+
+        $this->assertDatabaseMissing(User::class, [
+            'username' => 'jim'
+        ]);
+    }
+
+    public function testAssertDatabaseMissingFails()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("Failed asserting that a row of [Tests\App\Entity\User] table does not match the attributes {\n    \"username\": \"john\"\n}..");
+
+        $this->loadFixtures([LoadUserData::class]);
+
+        $this->assertDatabaseMissing(User::class, [
+            'username' => 'john'
+        ]);
     }
 
     public function testGetContainer()
