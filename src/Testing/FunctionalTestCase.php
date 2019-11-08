@@ -5,6 +5,7 @@ namespace Gricob\FunctionalTestBundle\Testing;
 use Gricob\FunctionalTestBundle\Concerns\InteractsWithConsole;
 use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
 use Gricob\FunctionalTestBundle\Concerns\MakesHttpRequests;
+use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -18,11 +19,6 @@ class FunctionalTestCase extends BaseWebTestCase
      * @var array
      */
     private $kernelOptions = [];
-
-    /**
-     * @var Container[]
-     */
-    private $containers;
 
     protected function setUp(): void
     {
@@ -103,15 +99,23 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function getContainer(): Container
     {
-        $env = $this->getEnvironment();
+        $this->ensureKernelBooted();
 
-        if (!isset($this->containers[$env])) {
-            $kernel = $this->bootKernel($this->getKernelOptions());
+        return static::$kernel->getContainer();
+    }
 
-            $this->containers[$env] = $kernel->getContainer();
+    protected function getTestContainer(): TestContainer
+    {
+        $this->ensureKernelBooted();
+
+        return static::$container;
+    }
+
+    protected function ensureKernelBooted()
+    {
+        if (!static::$container) {
+            $this->bootKernel($this->getKernelOptions());
         }
-
-        return $this->containers[$env];
     }
 
     protected function getKernelOptions(): array
