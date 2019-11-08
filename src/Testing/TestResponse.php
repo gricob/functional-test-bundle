@@ -5,11 +5,10 @@ namespace Gricob\FunctionalTestBundle\Testing;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Bridge\Twig\DataCollector\TwigDataCollector;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Profiler\Profile;
-use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class TestResponse
 {
