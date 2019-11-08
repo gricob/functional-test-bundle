@@ -101,7 +101,7 @@ class FunctionalTestCase extends BaseWebTestCase
     {
         $this->ensureKernelBooted();
 
-        return self::$kernel->getContainer();
+        return static::$kernel->getContainer();
     }
 
     protected function getTestContainer(): TestContainer
@@ -113,7 +113,7 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function ensureKernelBooted()
     {
-        if (!static::$kernel) {
+        if (!static::$container) {
             $this->bootKernel($this->getKernelOptions());
         }
     }
