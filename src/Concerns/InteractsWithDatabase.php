@@ -10,8 +10,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gricob\FunctionalTestBundle\Enums\Events;
 use Gricob\FunctionalTestBundle\Event\SchemaEvent;
-use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use Gricob\FunctionalTestBundle\Constraints\HasInDatabase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\Constraint\LogicalNot as ReverseConstraint;
 
 trait InteractsWithDatabase
 {
@@ -60,20 +63,6 @@ trait InteractsWithDatabase
         $this->schemaTool->dropDatabase();
     }
 
-    protected function createDatabaseBackup(): void
-    {
-        copy($this->em->getConnection()->getDatabase(), $this->backupFile);
-    }
-
-    protected function loadDatabaseBackup(): bool
-    {
-        if (file_exists($this->backupFile)) {
-            return copy($this->backupFile, $this->em->getConnection()->getDatabase());
-        }
-
-        return false;
-    }
-
     protected function loadFixtures($fixtureClasses, $append = true): void
     {
         $loader = $this->getFixtureLoader($fixtureClasses);
@@ -120,6 +109,20 @@ trait InteractsWithDatabase
     protected function getReference(string $ref)
     {
         return $this->executor->getReferenceRepository()->getReference($ref);
+    }
+
+    protected function assertDatabaseHas(string $entityClass, array $data)
+    {
+        PHPUnit::assertThat($entityClass, new HasInDatabase($this->em, $data));
+    }
+
+    protected function assertDatabaseMissing(string $entityClass, array $data)
+    {
+        $constraint = new ReverseConstraint(
+            new HasInDatabase($this->em, $data)
+        );
+
+        PHPUnit::assertThat($entityClass, $constraint);
     }
 
     abstract protected function getContainer(): Container;
