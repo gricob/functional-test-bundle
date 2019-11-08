@@ -7,6 +7,7 @@ use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
+use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Component\DependencyInjection\Container;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
@@ -132,5 +133,12 @@ class FunctionalTestCaseTest extends FunctionalTestCase
 
         $this->assertInstanceOf(Container::class, $container);
         $this->assertEquals('test', $container->get('kernel')->getEnvironment());
+    }
+
+    public function testGetTestContainer()
+    {
+        $container = $this->getTestContainer();
+
+        $this->assertInstanceOf(TestContainer::class, $container);
     }
 }
