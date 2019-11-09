@@ -92,6 +92,10 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function setEnvironment(string $env): self
     {
+        if (static::$kernel->getEnvironment() != $env) {
+            $this->ensureKernelShutdown();
+        }
+
         $this->kernelOptions['environment'] = $env;
 
         return $this;
@@ -99,19 +103,19 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function getContainer(): Container
     {
-        $this->ensureKernelBooted();
+        $this->ensureKernelBoot();
 
         return static::$kernel->getContainer();
     }
 
     protected function getTestContainer(): TestContainer
     {
-        $this->ensureKernelBooted();
+        $this->ensureKernelBoot();
 
         return static::$container;
     }
 
-    protected function ensureKernelBooted()
+    protected function ensureKernelBoot()
     {
         if (!static::$container) {
             $this->bootKernel($this->getKernelOptions());

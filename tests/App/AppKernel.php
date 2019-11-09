@@ -27,6 +27,10 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config.yml');
+        $loader->load(__DIR__ . '/config/config.yml');
+
+        if ($this->getEnvironment() == 'prevent_remove_unused_definitions') {
+            $loader->load(__DIR__ . '/config/prevent_remove_unused_definitions.yml');
+        }
     }
 }

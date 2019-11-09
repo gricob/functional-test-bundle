@@ -16,6 +16,11 @@ class FunctionalTestExtension extends Extension
 
         $config = $processor->processConfiguration($configuration, $configs);
 
+        $container->setParameter(
+            'functional_test.unused_definitions',
+            $config['unused_definitions']
+        );
+
         if ($config['optimization']['database']['use_cache']) {
             $container->register(SqLiteSubscriber::class)
                 ->setArguments([$config['optimization']['database']['cache_dir']])

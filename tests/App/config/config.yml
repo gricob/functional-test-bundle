@@ -75,3 +75,7 @@ services:
     Tests\App\Controller\DefaultController:
         calls:
             - ['setContainer', ['@service_container']]
+
+    test.unused_private_service:
+        class: Tests\App\Services\UnusedService
+        public: false

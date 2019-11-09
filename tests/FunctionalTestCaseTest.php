@@ -7,11 +7,12 @@ use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
-use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
 use Tests\App\Entity\User;
+use Tests\App\Services\UnusedService;
 
 class FunctionalTestCaseTest extends FunctionalTestCase
 {
@@ -176,10 +177,25 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $this->assertEquals('test', $container->get('kernel')->getEnvironment());
     }
 
-    public function testGetTestContainer()
+    public function testContainerCannotGetUnusedServiceWhenUsingPreventRemoveUnusedDefinitions()
     {
-        $container = $this->getTestContainer();
+        $this->expectException(ServiceNotFoundException::class);
+        $this->expectExceptionMessage(
+            'The "test.unused_private_service" service or alias has been removed or inlined when the container was compiled.'.
+            ' You should either make it public, or stop using the container directly and use dependency injection instead.'
+        );
 
-        $this->assertInstanceOf(TestContainer::class, $container);
+        $container = $this->setEnvironment('test')->getContainer();
+
+        $this->assertInstanceOf(UnusedService::class, $container->get('test.unused_private_service'));
+    }
+
+    public function testContainerCanGetUnusedServiceWhenUsingPreventRemoveUnusedDefinitions()
+    {
+        $this->setEnvironment('prevent_remove_unused_definitions');
+
+        $container = $this->getContainer();
+
+        $this->assertInstanceOf(UnusedService::class, $container->get('test.unused_private_service'));
     }
 }
