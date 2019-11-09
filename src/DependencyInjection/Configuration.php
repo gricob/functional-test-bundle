@@ -11,13 +11,25 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('functional_test');
+        $root = $treeBuilder->getRootNode()->addDefaultsIfNotSet();
 
-        $this->getConfigOptimization($treeBuilder->getRootNode());
+        $this->getBaseConfig($root);
+        $this->getOptimizationConfig($root);
 
         return $treeBuilder;
     }
 
-    private function getConfigOptimization(ArrayNodeDefinition $root)
+    private function getBaseConfig(ArrayNodeDefinition $root)
+    {
+        $root
+            ->children()
+                ->arrayNode('unused_definitions')
+                    ->scalarPrototype()->end()
+                ->end()
+            ->end();
+    }
+
+    private function getOptimizationConfig(ArrayNodeDefinition $root)
     {
         $root
             ->children()
