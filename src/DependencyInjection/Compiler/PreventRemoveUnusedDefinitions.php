@@ -9,7 +9,9 @@ class PreventRemoveUnusedDefinitions implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$unusedDefinitions = $container->getParameter('functional_test.unused_definitions')) {
+        $unusedDefinitions = $container->getParameter('functional_test.unused_definitions');
+
+        if (empty($unusedDefinitions)) {
             return;
         }
 
