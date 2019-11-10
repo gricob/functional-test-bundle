@@ -9,6 +9,8 @@ use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Tests\File\UploadedFileTest;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
 use Tests\App\Entity\User;
@@ -34,11 +36,19 @@ class FunctionalTestCaseTest extends FunctionalTestCase
 
     public function testPostRequest()
     {
+        $file = new UploadedFile(
+            __DIR__.'/uploads/test.txt',
+            'test.txt',
+            'text/plain',
+            null
+        );
+
         $this->post('/post-uri', [
-            'q' => 'Test post param'
+            'q' => 'Test post param',
+            'file' => $file
         ])
             ->assertOk()
-            ->assertSee('Test post param');
+            ->assertSee('Test post param | test.txt');
     }
 
     public function testRedirect()

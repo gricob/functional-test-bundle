@@ -6,6 +6,7 @@ use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -44,14 +45,23 @@ trait MakesHttpRequests
 
     protected function request(string $method, string $uri, array $parameters = []): TestResponse
     {
-        if(!$this->client) {
+        if (!$this->client) {
             $this->initClient();
+        }
+
+        $files = [];
+        foreach ($parameters as $key => $parameter) {
+            if ($parameter instanceof UploadedFile) {
+                $files[$key] = $parameter;
+
+                unset($parameters[$key]);
+            }
         }
 
         $this->client->catchExceptions($this->catchExceptions);
         $this->client->followRedirects($this->followRedirects);
 
-        $crawler = $this->client->request($method, $uri, $parameters);
+        $crawler = $this->client->request($method, $uri, $parameters, $files);
 
         $this->catchExceptions = false;
         $this->followRedirects = false;
@@ -93,7 +103,7 @@ trait MakesHttpRequests
     {
         $this->client = static::createClient($this->getKernelOptions());
 
-        if($this->firewallLogins) {
+        if ($this->firewallLogins) {
             $options = $this->client->getContainer()->getParameter('session.storage.options');
 
             if (!$options || !isset($options['name'])) {
