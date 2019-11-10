@@ -1,6 +1,7 @@
 framework:
     secret: secret
     test: ~
+    form: ~
     router: { resource: "%kernel.root_dir%/../App/routing.yml" }
     profiler:
         only_exceptions: false

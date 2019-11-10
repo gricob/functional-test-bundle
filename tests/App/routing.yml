@@ -23,3 +23,7 @@ test_exception:
 test_view:
     path:  /view
     defaults: { _controller: 'Tests\App\Controller\DefaultController::viewAction' }
+
+test_form:
+    path: /form
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::submitForm' }

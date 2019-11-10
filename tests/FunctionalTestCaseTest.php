@@ -5,10 +5,15 @@ namespace Tests;
 use Exception;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
+use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
@@ -35,19 +40,30 @@ class FunctionalTestCaseTest extends FunctionalTestCase
 
     public function testPostRequest()
     {
-        $file = new UploadedFile(
-            __DIR__.'/uploads/test.txt',
-            'test.txt',
-            'text/plain',
-            null
-        );
-
         $this->post('/post-uri', [
             'q' => 'Test post param',
-            'file' => $file
+            'file' => $this->getTestFile()
         ])
             ->assertOk()
             ->assertSee('Test post param | test.txt');
+    }
+
+    public function testFormSubmit()
+    {
+        $response = $this->get('/form');
+
+        $form = $response->getCrawler()->filter('form')->form();
+
+        $form['form[title]']->setValue('Test article');
+        $form['form[attachment]']->upload($this->getTestFile());
+
+        $response = $this->submit($form);
+
+        $this->assertInstanceOf(TestResponse::class, $response);
+        $response->assertSeeAll([
+            'Test article',
+            'test.txt'
+        ]);
     }
 
     public function testRedirect()
@@ -206,5 +222,15 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $container = $this->getContainer();
 
         $this->assertInstanceOf(UnusedService::class, $container->get('test.unused_private_service'));
+    }
+
+    private function getTestFile()
+    {
+        return new UploadedFile(
+            __DIR__.'/uploads/test.txt',
+            'test.txt',
+            'text/plain',
+            null
+        );
     }
 }

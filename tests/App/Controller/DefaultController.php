@@ -3,9 +3,12 @@
 namespace Tests\App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\App\Entity\Article;
 
 class DefaultController extends AbstractController
 {
@@ -19,6 +22,31 @@ class DefaultController extends AbstractController
         $file = $request->files->get('file');
 
         return new Response($request->get('q').' | '.$file->getFilename());
+    }
+
+    public function submitForm(Request $request)
+    {
+        $article = new Article();
+
+        $form = $this->createFormBuilder($article)
+            ->add('title', TextType::class)
+            ->add('attachment', FileType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() and $form->isValid()) {
+            $article = $form->getData();
+
+            return $this->render('form_success.html.twig', [
+                'article' => $article,
+                'attachment' => $article->getAttachment()->getClientOriginalName()
+            ]);
+        }
+
+        return $this->render('form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     public function redirectAction(Request $request)
