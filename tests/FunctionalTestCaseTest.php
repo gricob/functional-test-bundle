@@ -9,6 +9,7 @@ use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\App\AppKernel;
 use Tests\App\DataFixtures\LoadUserData;
 use Tests\App\Entity\User;
@@ -34,11 +35,19 @@ class FunctionalTestCaseTest extends FunctionalTestCase
 
     public function testPostRequest()
     {
+        $file = new UploadedFile(
+            __DIR__.'/uploads/test.txt',
+            'test.txt',
+            'text/plain',
+            null
+        );
+
         $this->post('/post-uri', [
-            'q' => 'Test post param'
+            'q' => 'Test post param',
+            'file' => $file
         ])
             ->assertOk()
-            ->assertSee('Test post param');
+            ->assertSee('Test post param | test.txt');
     }
 
     public function testRedirect()
@@ -118,15 +127,15 @@ class FunctionalTestCaseTest extends FunctionalTestCase
 
     public function testAssertViewIs()
     {
-        $this->get('/view')->assertViewIs('test.twig.html');
+        $this->get('/view')->assertViewIs('test.html.twig');
     }
 
     public function testAssertViewIsFails()
     {
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage('Actual view [test.twig.html] does not match expected view [other-view.twig.html]');
+        $this->expectExceptionMessage('Actual view [test.html.twig] does not match expected view [other-view.html.twig]');
 
-        $this->get('/view')->assertViewIs('other-view.twig.html');
+        $this->get('/view')->assertViewIs('other-view.html.twig');
     }
 
     public function testAssertDatabaseHas()

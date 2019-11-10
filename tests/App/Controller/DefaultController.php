@@ -16,7 +16,9 @@ class DefaultController extends AbstractController
 
     public function postAction(Request $request)
     {
-        return new Response($request->get('q'));
+        $file = $request->files->get('file');
+
+        return new Response($request->get('q').' | '.$file->getFilename());
     }
 
     public function redirectAction(Request $request)
@@ -36,6 +38,6 @@ class DefaultController extends AbstractController
 
     public function viewAction()
     {
-        return $this->render('test.twig.html');
+        return $this->render('test.html.twig');
     }
 }
