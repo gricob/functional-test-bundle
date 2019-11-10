@@ -38,6 +38,6 @@ class DefaultController extends AbstractController
 
     public function viewAction()
     {
-        return $this->render('test.twig.html');
+        return $this->render('test.html.twig');
     }
 }
