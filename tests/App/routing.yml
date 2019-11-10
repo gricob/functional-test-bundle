@@ -27,3 +27,7 @@ test_view:
 test_form:
     path: /form
     defaults: { _controller: 'Tests\App\Controller\DefaultController::submitForm' }
+
+test_headers:
+    path: /headers
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::headers' }

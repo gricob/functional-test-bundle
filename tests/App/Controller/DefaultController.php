@@ -68,4 +68,15 @@ class DefaultController extends AbstractController
     {
         return $this->render('test.html.twig');
     }
+
+    public function headers(Request $request)
+    {
+        $html = '<ul>';
+        foreach ($request->headers as $header => $value) {
+            $html .= '<li>'.$header.'|'.$value[0].'</li>';
+        }
+        $html .= '</ul>';
+
+        return new Response($html);
+    }
 }

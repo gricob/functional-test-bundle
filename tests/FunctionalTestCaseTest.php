@@ -78,6 +78,14 @@ class FunctionalTestCaseTest extends FunctionalTestCase
             ->assertSee('Query not provided');
     }
 
+    public function testWithHeaders()
+    {
+        $this->withHeaders([
+            'referer' => '/foo/bar'
+        ])->get('/headers')
+            ->assertSee('referer|/foo/bar');
+    }
+
     public function testNotFound()
     {
         $this->catchExceptions()->get('/not-found-uri')->assertNotFound();

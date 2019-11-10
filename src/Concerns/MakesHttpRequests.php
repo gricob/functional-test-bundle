@@ -3,6 +3,7 @@
 namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
+use Illuminate\Support\Str;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;
@@ -17,6 +18,11 @@ trait MakesHttpRequests
      * @var Client
      */
     protected $client;
+
+    /**
+     * @var array
+     */
+    protected $server = [];
 
     /**
      * @var bool
@@ -61,8 +67,9 @@ trait MakesHttpRequests
         $this->client->catchExceptions($this->catchExceptions);
         $this->client->followRedirects($this->followRedirects);
 
-        $crawler = $this->client->request($method, $uri, $parameters, $files);
+        $crawler = $this->client->request($method, $uri, $parameters, $files, $this->server);
 
+        $this->server = [];
         $this->catchExceptions = false;
         $this->followRedirects = false;
 
@@ -76,6 +83,19 @@ trait MakesHttpRequests
         $form->setValues($values);
 
         return $this->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+    }
+
+    protected function withHeaders(array $headers): self
+    {
+        foreach ($headers as $header => $value) {
+            if (!Str::startsWith($header, 'HTTP_')) {
+                $header = 'HTTP_'.$header;
+            }
+
+            $this->server[strtoupper($header)] = $value;
+        }
+
+        return $this;
     }
 
     protected function followingRedirects(): self
