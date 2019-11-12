@@ -6,6 +6,7 @@ use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -76,6 +77,11 @@ trait MakesHttpRequests
         $form->setValues($values);
 
         return $this->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+    }
+
+    protected function click(Link $link): TestResponse
+    {
+        return $this->request($link->getMethod(), $link->getUri());
     }
 
     protected function followingRedirects(): self
