@@ -115,7 +115,7 @@ class FunctionalTestCase extends BaseWebTestCase
         return static::$container;
     }
 
-    protected function ensureKernelBoot()
+    protected function ensureKernelBoot(): void
     {
         if (!static::$container) {
             $this->bootKernel($this->getKernelOptions());

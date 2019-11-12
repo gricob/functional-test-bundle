@@ -23,6 +23,8 @@ trait InteractsWithConsole
 
     protected function runCommand(string $name, array $parameters = [], array $inputs = null): CommandResult
     {
+        $this->ensureKernelBoot();
+
         $application = new Application($this->getContainer()->get('kernel'));
 
         $command = $application->find($name);
@@ -84,4 +86,6 @@ trait InteractsWithConsole
     }
 
     abstract function getContainer(): Container;
+
+    abstract function ensureKernelBoot(): void;
 }
