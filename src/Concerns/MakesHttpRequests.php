@@ -44,13 +44,13 @@ trait MakesHttpRequests
         return $this->request('POST', $uri, $parameters);
     }
 
-    protected function request(string $method, string $uri, array $parameters = []): TestResponse
+    protected function request(string $method, string $uri, array $parameters = [], $files = []): TestResponse
     {
         if (!$this->client) {
             $this->initClient();
         }
 
-        $files = [];
+        $files = $files ?? [];
         foreach ($parameters as $key => $parameter) {
             if ($parameter instanceof UploadedFile) {
                 $files[$key] = $parameter;
