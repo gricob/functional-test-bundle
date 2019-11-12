@@ -92,7 +92,7 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function setEnvironment(string $env): self
     {
-        if (static::$kernel->getEnvironment() != $env) {
+        if (static::$kernel and static::$kernel->getEnvironment() != $env) {
             $this->ensureKernelShutdown();
         }
 
