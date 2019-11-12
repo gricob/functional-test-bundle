@@ -72,7 +72,7 @@ trait MakesHttpRequests
             ->setContainer($this->getContainer());
     }
 
-    protected function followRedirect()
+    protected function followRedirect(): TestResponse
     {
         $crawler = $this->client->followRedirect();
 
