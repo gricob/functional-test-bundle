@@ -72,6 +72,15 @@ trait MakesHttpRequests
             ->setContainer($this->getContainer());
     }
 
+    protected function followRedirect(): TestResponse
+    {
+        $crawler = $this->client->followRedirect();
+
+        return TestResponse::fromBaseResponse($this->client->getResponse())
+            ->setCrawler($crawler)
+            ->setContainer($this->getContainer());
+    }
+
     protected function submit(Form $form, array $values = []): TestResponse
     {
         $form->setValues($values);
