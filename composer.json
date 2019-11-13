@@ -18,8 +18,8 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.3",
-        "phpunit/phpunit": "^6.0",
         "symfony/form": "^4.3"
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "psr-4": {

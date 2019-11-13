@@ -23,7 +23,7 @@ class HasInDatabase extends Constraint
         $this->em = $em;
     }
 
-    public function matches($entityClass)
+    public function matches($entityClass): bool
     {
         return !empty($this->em->getRepository($entityClass)->findBy($this->data));
     }
@@ -37,7 +37,7 @@ class HasInDatabase extends Constraint
         );
     }
 
-    public function toString()
+    public function toString(): string
     {
         return json_encode($this->data, JSON_PRETTY_PRINT);
     }

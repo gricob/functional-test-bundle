@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -102,6 +103,15 @@ trait MakesHttpRequests
         ])->request($method, $uri, [], [], json_encode($content));
     }
 
+    protected function followRedirect(): TestResponse
+    {
+        $crawler = $this->client->followRedirect();
+
+        return TestResponse::fromBaseResponse($this->client->getResponse())
+            ->setCrawler($crawler)
+            ->setContainer($this->getContainer());
+    }
+
     protected function submit(Form $form, array $values = []): TestResponse
     {
         $form->setValues($values);
@@ -121,6 +131,11 @@ trait MakesHttpRequests
         }
 
         return $this;
+    }
+
+    protected function click(Link $link): TestResponse
+    {
+        return $this->request($link->getMethod(), $link->getUri());
     }
 
     protected function followingRedirects(): self
