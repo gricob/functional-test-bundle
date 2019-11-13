@@ -49,9 +49,14 @@ trait MakesHttpRequests
         return $this->request('POST', $uri, $parameters);
     }
 
+    protected function getJson(string $uri, $content)
+    {
+        return $this->json('GET', $uri, $content);
+    }
+
     protected function postJson(string $uri, $content): TestResponse
     {
-        return $this->request('POST', $uri, [], [], json_encode($content));
+        return $this->json('POST', $uri, $content);
     }
 
     protected function request(
@@ -89,6 +94,14 @@ trait MakesHttpRequests
             ->setContainer($this->getContainer());
     }
 
+    protected function json(string $method, string $uri, $content): TestResponse
+    {
+        return $this->withHeaders([
+            'CONTENT_TYPE' => 'application/json',
+            'ACCEPT' => 'application/json',
+        ])->request($method, $uri, [], [], json_encode($content));
+    }
+
     protected function submit(Form $form, array $values = []): TestResponse
     {
         $form->setValues($values);
@@ -98,7 +111,14 @@ trait MakesHttpRequests
 
     protected function withHeaders(array $headers): self
     {
-        $this->server = array_merge($this->server, $headers);
+
+        foreach ($headers as $header => $value) {
+            if (!Str::startsWith($header, 'HTTP_') and $header !== 'CONTENT_TYPE' and $header !== 'REMOTE_ADDR') {
+                $header = 'HTTP_'.$header;
+            }
+
+            $this->server[strtoupper($header)] = $value;
+        }
 
         return $this;
     }

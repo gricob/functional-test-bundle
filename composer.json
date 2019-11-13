@@ -11,7 +11,7 @@
     "require": {
         "php": "^7.1",
         "symfony/symfony": "^4.3",
-        "symfony/monolog-bundle": "^3.4",
+        "symfony/monolog-bundle": "3.4.x",
         "twig/twig": "^2.12",
         "doctrine/doctrine-fixtures-bundle": "^3.2",
         "illuminate/support": "^6.4"

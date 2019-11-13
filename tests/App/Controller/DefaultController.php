@@ -17,6 +17,15 @@ class DefaultController extends AbstractController
         return new Response($request->query->get('q', 'Query not provided'));
     }
 
+    public function getJsonAction(Request $request)
+    {
+        $this->ensureJsonRequest($request);
+
+        $content = json_decode($request->getContent());
+
+        return new Response('Your name is '.$content->name);
+    }
+
     public function postAction(Request $request)
     {
         $file = $request->files->get('file');
@@ -26,6 +35,8 @@ class DefaultController extends AbstractController
 
     public function postJsonAction(Request $request)
     {
+        $this->ensureJsonRequest($request);
+
         $content = json_decode($request->getContent());
 
         return new Response('Your name is '.$content->name);
@@ -85,5 +96,12 @@ class DefaultController extends AbstractController
         $html .= '</ul>';
 
         return new Response($html);
+    }
+
+    private function ensureJsonRequest(Request $request)
+    {
+        if ($request->headers->get('Content-Type') != 'application/json') {
+            throw new \Exception('Content type is no application/json');
+        }
     }
 }

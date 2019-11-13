@@ -8,6 +8,11 @@ test_post:
     defaults: { _controller: 'Tests\App\Controller\DefaultController::postAction' }
     methods: POST
 
+test_get_json:
+    path:  /get-json
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::getJsonAction' }
+    methods: GET
+
 test_post_json:
     path:  /post-json
     defaults: { _controller: 'Tests\App\Controller\DefaultController::postJsonAction' }

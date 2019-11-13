@@ -48,6 +48,13 @@ class FunctionalTestCaseTest extends FunctionalTestCase
             ->assertSee('Test post param | test.txt');
     }
 
+    public function testGetJsonRequest()
+    {
+        $this->getJson('/get-json', [
+            'name' => 'John'
+        ])->assertSee('Your name is John');
+    }
+
     public function testPostJsonRequest()
     {
         $this->postJson('/post-json', [
@@ -88,7 +95,7 @@ class FunctionalTestCaseTest extends FunctionalTestCase
     public function testWithHeaders()
     {
         $this->withHeaders([
-            'HTTP_REFERER' => '/foo/bar'
+            'referer' => '/foo/bar'
         ])->get('/headers')
             ->assertSee('referer|/foo/bar');
     }
