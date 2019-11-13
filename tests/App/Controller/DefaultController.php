@@ -24,6 +24,13 @@ class DefaultController extends AbstractController
         return new Response($request->get('q').' | '.$file->getFilename());
     }
 
+    public function postJsonAction(Request $request)
+    {
+        $content = json_decode($request->getContent());
+
+        return new Response('Your name is '.$content->name);
+    }
+
     public function submitForm(Request $request)
     {
         $article = new Article();

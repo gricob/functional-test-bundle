@@ -8,6 +8,11 @@ test_post:
     defaults: { _controller: 'Tests\App\Controller\DefaultController::postAction' }
     methods: POST
 
+test_post_json:
+    path:  /post-json
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::postJsonAction' }
+    methods: POST
+
 test_redirect:
     path:  /redirect-uri
     defaults: { _controller: 'Tests\App\Controller\DefaultController::redirectAction' }

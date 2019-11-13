@@ -49,8 +49,19 @@ trait MakesHttpRequests
         return $this->request('POST', $uri, $parameters);
     }
 
-    protected function request(string $method, string $uri, array $parameters = [], array $files = []): TestResponse
+    protected function postJson(string $uri, $content): TestResponse
     {
+        return $this->request('POST', $uri, [], [], json_encode($content));
+    }
+
+    protected function request(
+        string $method,
+        string $uri,
+        array $parameters = [],
+        array $files = [],
+        $content = null,
+        bool $changeHistory = true
+    ): TestResponse {
         if (!$this->client) {
             $this->initClient();
         }
@@ -67,7 +78,7 @@ trait MakesHttpRequests
         $this->client->catchExceptions($this->catchExceptions);
         $this->client->followRedirects($this->followRedirects);
 
-        $crawler = $this->client->request($method, $uri, $parameters, $files, $this->server);
+        $crawler = $this->client->request($method, $uri, $parameters, $files, $this->server, $content, $changeHistory);
 
         $this->server = [];
         $this->catchExceptions = false;
@@ -87,13 +98,7 @@ trait MakesHttpRequests
 
     protected function withHeaders(array $headers): self
     {
-        foreach ($headers as $header => $value) {
-            if (!Str::startsWith($header, 'HTTP_')) {
-                $header = 'HTTP_'.$header;
-            }
-
-            $this->server[strtoupper($header)] = $value;
-        }
+        $this->server = array_merge($this->server, $headers);
 
         return $this;
     }
