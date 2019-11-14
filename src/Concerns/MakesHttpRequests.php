@@ -3,6 +3,7 @@
 namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
+use Illuminate\Support\Str;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Form;
@@ -18,6 +19,11 @@ trait MakesHttpRequests
      * @var Client
      */
     protected $client;
+
+    /**
+     * @var array
+     */
+    protected $server = [];
 
     /**
      * @var bool
@@ -44,8 +50,24 @@ trait MakesHttpRequests
         return $this->request('POST', $uri, $parameters);
     }
 
-    protected function request(string $method, string $uri, array $parameters = [], $files = []): TestResponse
+    protected function getJson(string $uri, $content)
     {
+        return $this->json('GET', $uri, $content);
+    }
+
+    protected function postJson(string $uri, $content): TestResponse
+    {
+        return $this->json('POST', $uri, $content);
+    }
+
+    protected function request(
+        string $method,
+        string $uri,
+        array $parameters = [],
+        array $files = [],
+        $content = null,
+        bool $changeHistory = true
+    ): TestResponse {
         if (!$this->client) {
             $this->initClient();
         }
@@ -62,14 +84,23 @@ trait MakesHttpRequests
         $this->client->catchExceptions($this->catchExceptions);
         $this->client->followRedirects($this->followRedirects);
 
-        $crawler = $this->client->request($method, $uri, $parameters, $files);
+        $crawler = $this->client->request($method, $uri, $parameters, $files, $this->server, $content, $changeHistory);
 
+        $this->server = [];
         $this->catchExceptions = false;
         $this->followRedirects = false;
 
         return TestResponse::fromBaseResponse($this->client->getResponse())
             ->setCrawler($crawler)
             ->setContainer($this->getContainer());
+    }
+
+    protected function json(string $method, string $uri, $content): TestResponse
+    {
+        return $this->withHeaders([
+            'CONTENT_TYPE' => 'application/json',
+            'ACCEPT' => 'application/json',
+        ])->request($method, $uri, [], [], json_encode($content));
     }
 
     protected function followRedirect(): TestResponse
@@ -86,6 +117,20 @@ trait MakesHttpRequests
         $form->setValues($values);
 
         return $this->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+    }
+
+    protected function withHeaders(array $headers): self
+    {
+
+        foreach ($headers as $header => $value) {
+            if (!Str::startsWith($header, 'HTTP_') and $header !== 'CONTENT_TYPE' and $header !== 'REMOTE_ADDR') {
+                $header = 'HTTP_'.$header;
+            }
+
+            $this->server[strtoupper($header)] = $value;
+        }
+
+        return $this;
     }
 
     protected function click(Link $link): TestResponse

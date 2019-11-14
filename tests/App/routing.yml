@@ -8,6 +8,16 @@ test_post:
     defaults: { _controller: 'Tests\App\Controller\DefaultController::postAction' }
     methods: POST
 
+test_get_json:
+    path:  /get-json
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::getJsonAction' }
+    methods: GET
+
+test_post_json:
+    path:  /post-json
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::postJsonAction' }
+    methods: POST
+
 test_redirect:
     path:  /redirect-uri
     defaults: { _controller: 'Tests\App\Controller\DefaultController::redirectAction' }
@@ -23,3 +33,11 @@ test_exception:
 test_view:
     path:  /view
     defaults: { _controller: 'Tests\App\Controller\DefaultController::viewAction' }
+
+test_form:
+    path: /form
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::submitForm' }
+
+test_headers:
+    path: /headers
+    defaults: { _controller: 'Tests\App\Controller\DefaultController::headers' }
