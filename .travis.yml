@@ -1,0 +1,13 @@
+language: php
+
+php:
+    - 7.1.33
+    - 7.2
+    - 7.3
+    - 7.4
+
+before_script:
+    - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --no-interaction
+
+script:
+    - vendor/bin/phpunit tests
