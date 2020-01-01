@@ -38,8 +38,6 @@ trait InteractsWithDatabase
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
 
-        $this->executor = new ORMExecutor($this->em, new ORMPurger($this->em));
-
         $this->schemaTool = new SchemaTool($this->em);
     }
 
@@ -66,13 +64,11 @@ trait InteractsWithDatabase
 
     protected function loadFixtures($fixtureClasses, $append = true): void
     {
-        if (!class_exists(DoctrineFixturesBundle::class)) {
-            throw new \Exception('DoctrineFixturesBundle is required to load fixtures.');
-        }
+        $executor = $this->executor();
 
         $loader = $this->getFixtureLoader($fixtureClasses);
 
-        $this->executor->execute($loader->getFixtures(), $append);
+        $executor->execute($loader->getFixtures(), $append);
     }
 
     protected function getFixtureLoader(array $fixtureClasses): Loader
@@ -113,7 +109,7 @@ trait InteractsWithDatabase
 
     protected function getReference(string $ref)
     {
-        return $this->executor->getReferenceRepository()->getReference($ref);
+        return $this->executor()->getReferenceRepository()->getReference($ref);
     }
 
     protected function assertDatabaseHas(string $entityClass, array $data)
@@ -128,6 +124,24 @@ trait InteractsWithDatabase
         );
 
         PHPUnit::assertThat($entityClass, $constraint);
+    }
+
+    protected function executor()
+    {
+        $this->ensureDoctrineFixturesBundle();
+
+        if (!$this->executor) {
+            $this->executor = new ORMExecutor($this->em, new ORMPurger($this->em));
+        }
+
+        return $this->executor;
+    }
+
+    protected function ensureDoctrineFixturesBundle(): void
+    {
+        if (!class_exists(DoctrineFixturesBundle::class)) {
+            throw new \Exception('DoctrineFixturesBundle is required to load fixtures.');
+        }
     }
 
     abstract protected function getContainer(): Container;
