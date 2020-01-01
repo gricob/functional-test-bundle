@@ -168,13 +168,17 @@ class TestResponse
 
     protected function getTwigCollector(): TwigDataCollector
     {
+        if (!$this->getProfile()->hasCollector('twig')) {
+            PHPUnit::fail('Unable to get twig data collector.');
+        }
+
         return $this->getProfile()->getCollector('twig');
     }
 
     protected function getProfile(): Profile
     {
         if(!$this->getContainer()->has('profiler')) {
-            PHPUnit::fail('Profiler is not initialized');
+            PHPUnit::fail('Profiler is not initialized.');
         }
 
         $profiler = $this->getContainer()->get('profiler');

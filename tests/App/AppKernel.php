@@ -17,11 +17,11 @@ class AppKernel extends Kernel
     {
         return [
             new FrameworkBundle(),
-            new MonologBundle(),
-            new TwigBundle(),
             new SecurityBundle(),
             new DoctrineBundle(),
             new FunctionalTestBundle(),
+            new MonologBundle(),
+            new TwigBundle(),
         ];
     }
 

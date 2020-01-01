@@ -9,17 +9,28 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.1",
-        "symfony/symfony": "^4.3",
-        "symfony/monolog-bundle": "3.4.x",
-        "twig/twig": "^2.12",
-        "doctrine/doctrine-fixtures-bundle": "^3.2",
-        "illuminate/support": "^5.6"
+        "php": "^7.1.33",
+        "illuminate/support": "^5.6",
+        "phpunit/phpunit": "^7.5",
+        "symfony/browser-kit": "^4.4",
+        "symfony/css-selector": "^4.4"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.3",
-        "symfony/form": "^4.3",
-        "phpunit/phpunit": "^7.5"
+        "doctrine/doctrine-fixtures-bundle": "3.2.*",
+        "symfony/yaml": "^4.4|^5.0",
+        "symfony/twig-bundle": "^4.4",
+        "twig/twig": "^2.10",
+        "symfony/security-bundle": "^4.4",
+        "symfony/form": "^4.4",
+        "symfony/http-foundation": "^4.4",
+        "symfony/var-dumper": "^4.4",
+        "symfony/dom-crawler": "^4.0",
+        "symfony/translation-contracts": "^1.0",
+        "symfony/monolog-bundle": "^3.5"
+    },
+    "suggest": {
+        "doctrine/doctrine-fixtures-bundle": "Required to perform loadFixtures",
+        "twig/twig": "Required to perform twig templates related assertion"
     },
     "autoload": {
         "psr-4": {

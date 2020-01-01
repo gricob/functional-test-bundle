@@ -2,6 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle\Concerns;
 
+use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
@@ -65,6 +66,10 @@ trait InteractsWithDatabase
 
     protected function loadFixtures($fixtureClasses, $append = true): void
     {
+        if (!class_exists(DoctrineFixturesBundle::class)) {
+            throw new \Exception('DoctrineFixturesBundle is required to load fixtures.');
+        }
+
         $loader = $this->getFixtureLoader($fixtureClasses);
 
         $this->executor->execute($loader->getFixtures(), $append);
