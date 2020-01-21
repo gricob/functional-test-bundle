@@ -29,6 +29,7 @@ class TestResponse
 
     /**
      * TestResponse constructor.
+     *
      * @param Response $baseResponse
      */
     protected function __construct(Response $baseResponse)
@@ -42,7 +43,7 @@ class TestResponse
     }
 
     /**
-     * @return null|Crawler
+     * @return Crawler|null
      */
     public function getCrawler(): ?Crawler
     {
@@ -51,6 +52,7 @@ class TestResponse
 
     /**
      * @param Crawler $crawler
+     *
      * @return TestResponse
      */
     public function setCrawler(Crawler $crawler): self
@@ -75,6 +77,14 @@ class TestResponse
         );
 
         return $this;
+    }
+
+    public function assertInstanceOf(string $expectedClass)
+    {
+        PHPUnit::assertInstanceOf(
+            $expectedClass,
+            $this->baseResponse
+        );
     }
 
     public function assertNotFound(): self
@@ -114,7 +124,7 @@ class TestResponse
 
     public function assertSeeAll(array $needles): self
     {
-        foreach($needles as $needle) {
+        foreach ($needles as $needle) {
             PHPUnit::assertContains($needle, $this->baseResponse->getContent());
         }
 
@@ -130,7 +140,7 @@ class TestResponse
 
     public function assertDontSeeAny(array $needles)
     {
-        foreach($needles as $needle) {
+        foreach ($needles as $needle) {
             PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
         }
 
@@ -140,7 +150,7 @@ class TestResponse
     public function assertExactJson(array $data): self
     {
         $actual = json_encode(Arr::sortRecursive(
-            (array)$this->decodeResponseJson()
+            (array) $this->decodeResponseJson()
         ));
 
         PHPUnit::assertEquals(json_encode(Arr::sortRecursive($data)), $actual);
@@ -177,7 +187,7 @@ class TestResponse
 
     protected function getProfile(): Profile
     {
-        if(!$this->getContainer()->has('profiler')) {
+        if (!$this->getContainer()->has('profiler')) {
             PHPUnit::fail('Profiler is not initialized.');
         }
 
@@ -187,7 +197,7 @@ class TestResponse
     }
 
     /**
-     * @return null|Container
+     * @return Container|null
      */
     public function getContainer(): ?Container
     {
@@ -196,6 +206,7 @@ class TestResponse
 
     /**
      * @param Container $container
+     *
      * @return TestResponse
      */
     public function setContainer(Container $container): self
