@@ -26,11 +26,13 @@
         "symfony/var-dumper": "^4.4",
         "symfony/dom-crawler": "^4.0",
         "symfony/translation-contracts": "^1.0",
-        "symfony/monolog-bundle": "^3.5"
+        "symfony/monolog-bundle": "^3.5",
+        "league/factory-muffin": "^3.1"
     },
     "suggest": {
-        "doctrine/doctrine-fixtures-bundle": "Required to perform loadFixtures",
-        "twig/twig": "Required to perform twig templates related assertion"
+        "doctrine/doctrine-fixtures-bundle": "Required to load fixtures",
+        "twig/twig": "Required to perform twig templates related assertions",
+        "league/factory-muffin": "Required to create objects using the factory"
     },
     "autoload": {
         "psr-4": {
@@ -41,5 +43,8 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "conflict": {
+        "doctrine/lexer": ">1.0.2"
     }
 }
