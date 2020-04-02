@@ -14,40 +14,36 @@ trait CreatesObjects
     /**
      * @var FactoryMuffin
      */
-    protected static $factory = null;
+    protected $factory = null;
+
+    public function setUpCreatesObjects()
+    {
+        $container = $this->getContainer();
+        $doctrine = $container->get('doctrine');
+
+        if (!$doctrine) {
+            throw new \LogicException('Doctrine is required to create objects.');
+        }
+
+        $this->factory = new FactoryMuffin(new RepositoryStore($doctrine->getManager()));
+
+        $this->factory->loadFactories($container->getParameter('kernel.root_dir').'/factories');
+    }
 
     protected function instance(string $entityClass, array $attributes = [])
     {
-        return $this->getFactory()->instance($entityClass, $attributes);
+        return $this->factory->instance($entityClass, $attributes);
     }
 
     protected function create(string $entityClass, array $attributes = [])
     {
-        return $this->getFactory()->create($entityClass, $attributes);
+        return $this->factory->create($entityClass, $attributes);
     }
 
     protected function seed(string $entityClass, int $times, array $attributes = [])
     {
-        return $this->getFactory()->seed($times, $entityClass, $attributes);
+        return $this->factory->seed($times, $entityClass, $attributes);
     }
 
-    protected function getFactory(): FactoryMuffin
-    {
-        if (is_null(static::$factory)) {
-            $container = $this->getContainer();
-            $doctrine = $container->get('doctrine');
-
-            if (!$doctrine) {
-                throw new \LogicException('Doctrine is required to create objects.');
-            }
-
-            self::$factory = new FactoryMuffin(new RepositoryStore($doctrine->getManager()));
-
-            self::$factory->loadFactories($container->getParameter('kernel.root_dir').'/factories');
-        }
-
-        return self::$factory;
-    }
-
-    abstract function getContainer(): Container;
+    abstract public function getContainer(): Container;
 }
