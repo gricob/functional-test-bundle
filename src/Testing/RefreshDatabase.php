@@ -2,15 +2,8 @@
 
 namespace Gricob\FunctionalTestBundle\Testing;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-
 trait RefreshDatabase
 {
-    /**
-     * @var Registry
-     */
-    protected $registry;
-
     protected function setUpRefreshDatabase(): void
     {
         $this->createDatabaseSchema();
