@@ -69,10 +69,12 @@ class TestResponse
 
     public function assertRedirect($expectedLocation = null): self
     {
+        $actualLocation = $this->baseResponse->headers->get('Location');
+
         PHPUnit::assertTrue(
             $this->baseResponse->isRedirect($expectedLocation),
-            $expectedLocation
-                ? "Response redirect location does not match expected [$expectedLocation] location."
+            $actualLocation
+                ? "Response redirect location [$actualLocation] does not match expected [$expectedLocation] location."
                 : 'Response is not a redirect.'
         );
 

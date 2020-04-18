@@ -59,7 +59,7 @@ class TestResponseTest extends TestCase
     public function testAssertRedirectFails()
     {
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage('Response redirect location does not match expected [/other-redirect] location');
+        $this->expectExceptionMessage('Response redirect location [/test-redirect] does not match expected [/other-redirect] location');
 
         TestResponse::fromBaseResponse(RedirectResponse::create('/test-redirect'))
             ->assertRedirect('/other-redirect');
