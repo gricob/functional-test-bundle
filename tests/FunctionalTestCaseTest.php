@@ -188,6 +188,8 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage("Failed asserting that a row of [Tests\App\Entity\User] table matches the attributes {\n    \"username\": \"john\"\n}..");
 
+        $this->ensureKernelBoot();
+
         $this->assertDatabaseHas(User::class, [
             'username' => 'john'
         ]);

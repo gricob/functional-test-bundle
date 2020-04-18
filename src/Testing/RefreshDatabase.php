@@ -6,15 +6,12 @@ trait RefreshDatabase
 {
     protected function setUpRefreshDatabase(): void
     {
-        $this->createDatabaseSchema();
-    }
-
-    protected function tearDownRefreshDatabase(): void
-    {
-        $this->dropDatabaseSchema();
+        $this->addKernelBootedCallback(function () {
+            $this->createDatabaseSchema();
+        }, 80);
     }
 
     abstract protected function createDatabaseSchema(): void;
 
-    abstract protected function dropDatabaseSchema(): void;
+    abstract protected function addKernelBootedCallback(\Closure $callback, int $priority);
 }

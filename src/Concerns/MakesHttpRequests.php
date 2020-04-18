@@ -4,8 +4,11 @@ namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use Illuminate\Support\Str;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -161,7 +164,7 @@ trait MakesHttpRequests
 
     protected function initClient()
     {
-        $this->client = static::createClient($this->getKernelOptions());
+        $this->client = self::getClient($this->getContainer()->get('test.client'));
 
         if ($this->firewallLogins) {
             $options = $this->client->getContainer()->getParameter('session.storage.options');
@@ -195,6 +198,21 @@ trait MakesHttpRequests
             $firewallName,
             $user->getRoles()
         );
+    }
+
+    private static function getClient(AbstractBrowser $newClient = null): ?AbstractBrowser
+    {
+        static $client;
+
+        if (0 < \func_num_args()) {
+            return $client = $newClient;
+        }
+
+        if (!$client instanceof AbstractBrowser) {
+            static::fail(sprintf('A client must be set to make assertions on it. Did you forget to call "%s::createClient()"?', __CLASS__));
+        }
+
+        return $client;
     }
 
     abstract protected function getKernelOptions(): array;

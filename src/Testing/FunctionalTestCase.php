@@ -4,21 +4,16 @@ namespace Gricob\FunctionalTestBundle\Testing;
 
 use Gricob\FunctionalTestBundle\Concerns\InteractsWithConsole;
 use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithKernel;
 use Gricob\FunctionalTestBundle\Concerns\MakesHttpRequests;
-use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
-use Symfony\Component\DependencyInjection\Container;
 
 class FunctionalTestCase extends BaseWebTestCase
 {
     use MakesHttpRequests,
         InteractsWithDatabase,
-        InteractsWithConsole;
-
-    /**
-     * @var array
-     */
-    private $kernelOptions = [];
+        InteractsWithConsole,
+        InteractsWithKernel;
 
     protected function setUp(): void
     {
@@ -36,33 +31,24 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function setUpTraits(): void
     {
-        $traits = $this->getUsedTraits();
+        $this->setUpInteractsWithKernel();
 
-        if (isset($traits[InteractsWithDatabase::class]) and isset($traits[RefreshDatabase::class])) {
-            $this->setUpInteractsWithDatabase();
-            $this->setUpRefreshDatabase();
-
-            unset($traits[InteractsWithDatabase::class]);
-            unset($traits[RefreshDatabase::class]);
-        }
-
-        foreach ($traits as $trait) {
-            $traitName = ($aux = explode('\\', $trait))[count($aux) - 1];
-
-            $setUpMethod = 'setUp' . ucfirst($traitName);
-
-            if (method_exists($this, $setUpMethod)) {
-                $this->{$setUpMethod}();
-            }
-        }
+        $this->forwardToTraits('setUp', [
+            InteractsWithKernel::class
+        ]);
     }
 
     protected function tearDownTraits(): void
     {
-        foreach ($this->getUsedTraits() as $trait) {
+        $this->forwardToTraits('tearDown');
+    }
+
+    protected function forwardToTraits(string $method, array $ignoreTraits = []): void
+    {
+        foreach ($this->getUsedTraits($ignoreTraits) as $trait) {
             $traitName = ($aux = explode('\\', $trait))[count($aux) - 1];
 
-            $setUpMethod = 'tearDown' . ucfirst($traitName);
+            $setUpMethod = $method . ucfirst($traitName);
 
             if (method_exists($this, $setUpMethod)) {
                 $this->{$setUpMethod}();
@@ -70,7 +56,7 @@ class FunctionalTestCase extends BaseWebTestCase
         }
     }
 
-    protected function getUsedTraits(): array
+    protected function getUsedTraits(array $ignore = []): array
     {
         $traits = [];
 
@@ -82,48 +68,10 @@ class FunctionalTestCase extends BaseWebTestCase
 
         $traits = array_combine($traits, $traits);
 
+        $traits = array_filter($traits, function ($trait) use ($ignore) {
+            return !in_array($trait, $ignore);
+        });
+
         return array_reverse($traits);
-    }
-
-    protected function getEnvironment(): string
-    {
-        return $this->kernelOptions['environment'] ?? 'test';
-    }
-
-    protected function setEnvironment(string $env): self
-    {
-        if (static::$kernel and static::$kernel->getEnvironment() != $env) {
-            $this->ensureKernelShutdown();
-        }
-
-        $this->kernelOptions['environment'] = $env;
-
-        return $this;
-    }
-
-    protected function getContainer(): Container
-    {
-        $this->ensureKernelBoot();
-
-        return static::$kernel->getContainer();
-    }
-
-    protected function getTestContainer(): TestContainer
-    {
-        $this->ensureKernelBoot();
-
-        return static::$container;
-    }
-
-    protected function ensureKernelBoot(): void
-    {
-        if (!static::$container) {
-            $this->bootKernel($this->getKernelOptions());
-        }
-    }
-
-    protected function getKernelOptions(): array
-    {
-        return $this->kernelOptions;
     }
 }

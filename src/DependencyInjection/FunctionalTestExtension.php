@@ -2,7 +2,6 @@
 
 namespace Gricob\FunctionalTestBundle\DependencyInjection;
 
-use Gricob\FunctionalTestBundle\Event\SqLiteSubscriber;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -21,10 +20,9 @@ class FunctionalTestExtension extends Extension
             $config['unused_definitions']
         );
 
-        if ($config['optimization']['database']['use_cache']) {
-            $container->register(SqLiteSubscriber::class)
-                ->setArguments([$config['optimization']['database']['cache_dir']])
-                ->addTag('kernel.event_subscriber');
-        }
+        $container->setParameter(
+            'functional_test.sqlite.backup_file',
+            $config['sqlite']['backup_file']
+        );
     }
 }

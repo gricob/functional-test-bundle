@@ -8,9 +8,11 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Driver\AbstractSQLiteDriver;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gricob\FunctionalTestBundle\Enums\Events;
-use Gricob\FunctionalTestBundle\Event\SchemaEvent;
+use Gricob\FunctionalTestBundle\Event\CreateSchemaEvent;
 use Gricob\FunctionalTestBundle\Constraints\HasInDatabase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
@@ -19,46 +21,41 @@ use PHPUnit\Framework\Constraint\LogicalNot as ReverseConstraint;
 
 trait InteractsWithDatabase
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var EntityManagerInterface */
     protected $em;
 
-    /**
-     * @var ORMExecutor
-     */
+    /** @var ORMExecutor */
     protected $executor;
 
-    /**
-     * @var SchemaTool
-     */
+    /** @var SchemaTool */
     protected $schemaTool;
 
     protected function setUpInteractsWithDatabase(): void
     {
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
+        $this->addKernelBootedCallback(function () {
+            $this->em = $this->getContainer()->get('doctrine')->getManager();
 
-        $this->schemaTool = new SchemaTool($this->em);
+            $this->schemaTool = new SchemaTool($this->em);
+        }, 100);
     }
 
     protected function createDatabaseSchema(): void
     {
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-        $event = new SchemaEvent($this->em);
+        $this->dropDatabaseSchema();
 
-        $dispatcher->dispatch($event, Events::PRE_CREATE_SCHEMA);
+        if (!$this->loadBackup()) {
+            $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
 
-        if ($event->isLoaded()) {
-            return;
+            $this->createBackup();
         }
-
-        $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
-
-        $dispatcher->dispatch($event, Events::POST_CREATE_SCHEMA);
     }
 
     protected function dropDatabaseSchema(): void
     {
+        if ($this->isSqlite() and @unlink($this->getDatabase())) {
+            return;
+        }
+
         $this->schemaTool->dropDatabase();
     }
 
@@ -130,6 +127,8 @@ trait InteractsWithDatabase
     {
         $this->ensureDoctrineFixturesBundle();
 
+        $this->ensureKernelBoot();
+
         if (!$this->executor) {
             $this->executor = new ORMExecutor($this->em, new ORMPurger($this->em));
         }
@@ -144,5 +143,42 @@ trait InteractsWithDatabase
         }
     }
 
+    private function loadBackup(): bool
+    {
+        if (!$this->isSqlite()) {
+            return false;
+        }
+
+        return @copy($this->getSqliteBackupFile(), $this->getDatabase());
+    }
+
+    private function createBackup(): void
+    {
+        if (!$this->isSqlite()) {
+            return;
+        }
+
+        @copy($this->getDatabase(), $this->getSqliteBackupFile());
+    }
+
+    private function getSqliteBackupFile(): string
+    {
+        return $this->getContainer()->getParameter('functional_test.sqlite.backup_file');
+    }
+
+    private function isSqlite(): bool
+    {
+        return $this->em->getConnection()->getDriver() instanceof AbstractSQLiteDriver;
+    }
+
+    private function getDatabase(): string
+    {
+        return $this->em->getConnection()->getDatabase();
+    }
+
+    abstract protected function ensureKernelBoot(): void;
+
     abstract protected function getContainer(): Container;
+
+    abstract protected function addKernelBootedCallback(\Closure $callback, int $priority);
 }
