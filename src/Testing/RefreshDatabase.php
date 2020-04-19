@@ -9,12 +9,5 @@ trait RefreshDatabase
         $this->createDatabaseSchema();
     }
 
-    protected function tearDownRefreshDatabase(): void
-    {
-        $this->dropDatabaseSchema();
-    }
-
     abstract protected function createDatabaseSchema(): void;
-
-    abstract protected function dropDatabaseSchema(): void;
 }

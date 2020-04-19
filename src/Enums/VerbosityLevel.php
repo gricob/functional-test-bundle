@@ -2,25 +2,19 @@
 
 namespace Gricob\FunctionalTestBundle\Enums;
 
-class VerbosityLevel
+/**
+ * @method static quiet()
+ * @method static normal()
+ * @method static verbose()
+ * @method static veryVerbose()
+ * @method static debug()
+ */
+class VerbosityLevel extends Enum
 {
-    const QUIET = 16;
-    const NORMAL = 32;
-    const VERBOSE = 64;
-    const VERY_VERBOSE = 128;
-    const DEBUG = 256;
-
-    public static function isValid(int $verbosity)
-    {
-        return in_array(
-            $verbosity,
-            [
-                self::QUIET,
-                self::NORMAL,
-                self::VERBOSE,
-                self::VERY_VERBOSE,
-                self::DEBUG
-            ]
-        );
-    }
+    const
+        QUIET = 16,
+        NORMAL = 32,
+        VERBOSE = 64,
+        VERY_VERBOSE = 128,
+        DEBUG = 256;
 }

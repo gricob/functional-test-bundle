@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Driver\AbstractSQLiteDriver;
 use Doctrine\ORM\Tools\SchemaTool;
 use Gricob\FunctionalTestBundle\Enums\Events;
 use Gricob\FunctionalTestBundle\Event\SchemaEvent;
@@ -43,18 +44,13 @@ trait InteractsWithDatabase
 
     protected function createDatabaseSchema(): void
     {
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-        $event = new SchemaEvent($this->em);
+        $this->dropDatabaseSchema();
 
-        $dispatcher->dispatch($event, Events::PRE_CREATE_SCHEMA);
+        if (!$this->loadBackup()) {
+            $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
 
-        if ($event->isLoaded()) {
-            return;
+            $this->createBackup();
         }
-
-        $this->schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
-
-        $dispatcher->dispatch($event, Events::POST_CREATE_SCHEMA);
     }
 
     protected function dropDatabaseSchema(): void
@@ -142,6 +138,39 @@ trait InteractsWithDatabase
         if (!class_exists(DoctrineFixturesBundle::class)) {
             throw new \Exception('DoctrineFixturesBundle is required to load fixtures.');
         }
+    }
+
+    private function loadBackup(): bool
+    {
+        if (!$this->isSqlite()) {
+            return false;
+        }
+
+        return @copy($this->getSqliteBackupFile(), $this->getDatabase());
+    }
+
+    private function createBackup(): void
+    {
+        if (!$this->isSqlite()) {
+            return;
+        }
+
+        @copy($this->getDatabase(), $this->getSqliteBackupFile());
+    }
+
+    private function getSqliteBackupFile(): string
+    {
+        return $this->getContainer()->getParameter('functional_test.sqlite.backup_file');
+    }
+
+    private function isSqlite(): bool
+    {
+        return $this->em->getConnection()->getDriver() instanceof AbstractSQLiteDriver;
+    }
+
+    private function getDatabase(): string
+    {
+        return $this->em->getConnection()->getDatabase();
     }
 
     abstract protected function getContainer(): Container;
