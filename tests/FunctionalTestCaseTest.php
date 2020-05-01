@@ -4,6 +4,7 @@ namespace Tests;
 
 use Exception;
 use Gricob\FunctionalTestBundle\Concerns\CreatesObjects;
+use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
@@ -149,16 +150,7 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Test command failed');
 
-        $this->runCommand('test:command', ['shouldFail'])->assertOk();
-    }
-
-    public function testInvalidVerbosityThrowException()
-    {
-        $this->expectException(OutOfBoundsException::class);
-        $this->expectExceptionMessage('The verbosity level [13] is invalid. 
-                Use VerbosityLevel class constants to prevent invalid verbosity level');
-
-        $this->setVerbosityLevel(13);
+        $this->setVerbosityLevel(VerbosityLevel::quiet())->runCommand('test:command', ['shouldFail'])->assertOk();
     }
 
     public function testAssertViewIs()

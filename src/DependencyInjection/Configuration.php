@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode()->addDefaultsIfNotSet();
 
         $this->getBaseConfig($root);
-        $this->getOptimizationConfig($root);
+        $this->getSqliteConfig($root);
 
         return $treeBuilder;
     }
@@ -29,19 +29,13 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function getOptimizationConfig(ArrayNodeDefinition $root)
+    private function getSqliteConfig(ArrayNodeDefinition $root)
     {
         $root
             ->children()
-                ->arrayNode('optimization')->addDefaultsIfNotSet()
+                ->arrayNode('sqlite')->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('database')->addDefaultsIfNotSet()
-                            ->children()
-                                ->booleanNode('use_cache')->defaultTrue()->end()
-                                ->scalarNode('cache_dir')
-                                    ->defaultValue('%kernel.cache_dir%/backup.db')->end()
-                            ->end()
-                        ->end()
+                        ->scalarNode('backup_file')->defaultValue('%kernel.cache_dir%/backup.db')
                     ->end()
                 ->end()
             ->end();

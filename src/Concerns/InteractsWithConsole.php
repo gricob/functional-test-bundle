@@ -11,14 +11,10 @@ use Symfony\Component\DependencyInjection\Container;
 
 trait InteractsWithConsole
 {
-    /**
-     * @var int
-     */
-    protected $verbosityLevel = VerbosityLevel::NORMAL;
+    /** @var VerbosityLevel */
+    protected $verbosityLevel;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $decorated = false;
 
     protected function runCommand(string $name, array $parameters = [], array $inputs = null): CommandResult
@@ -34,7 +30,7 @@ trait InteractsWithConsole
         $options = [
             'interactive' => false,
             'decorated' => $this->isDecorated(),
-            'verbosity' => $this->getVerbosityLevel()
+            'verbosity' => $this->getVerbosityLevel()->raw()
         ];
 
         if (!is_null($inputs)) {
@@ -50,20 +46,13 @@ trait InteractsWithConsole
         return CommandResult::fromCommandTester($commandTester);
     }
 
-    public function getVerbosityLevel(): int
+    public function getVerbosityLevel(): VerbosityLevel
     {
-        return $this->verbosityLevel;
+        return $this->verbosityLevel ?: VerbosityLevel::normal();
     }
 
-    public function setVerbosityLevel(int $verbosityLevel): self
+    public function setVerbosityLevel(VerbosityLevel $verbosityLevel): self
     {
-        if (!VerbosityLevel::isValid($verbosityLevel)) {
-            throw new OutOfBoundsException(
-                "The verbosity level [$verbosityLevel] is invalid. 
-                Use VerbosityLevel class constants to prevent invalid verbosity level"
-            );
-        }
-
         $this->verbosityLevel = $verbosityLevel;
 
         return $this;
@@ -85,7 +74,7 @@ trait InteractsWithConsole
         $this->decorated = $decorated;
     }
 
-    abstract function getContainer(): Container;
+    abstract protected function getContainer(): Container;
 
-    abstract function ensureKernelBoot(): void;
+    abstract protected function ensureKernelBoot(): void;
 }

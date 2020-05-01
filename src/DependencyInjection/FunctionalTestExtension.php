@@ -21,10 +21,9 @@ class FunctionalTestExtension extends Extension
             $config['unused_definitions']
         );
 
-        if ($config['optimization']['database']['use_cache']) {
-            $container->register(SqLiteSubscriber::class)
-                ->setArguments([$config['optimization']['database']['cache_dir']])
-                ->addTag('kernel.event_subscriber');
-        }
+        $container->setParameter(
+            'functional_test.sqlite.backup_file',
+            $config['sqlite']['backup_file']
+        );
     }
 }
