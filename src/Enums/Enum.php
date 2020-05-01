@@ -20,7 +20,13 @@ abstract class Enum
     {
         $refClass = new \ReflectionClass(static::class);
 
-        $value = $refClass->getConstant(strtoupper($name));
+        $constantName = strtoupper($name);
+
+        if (!$refClass->hasConstant($constantName)) {
+            throw new \Exception($name.'is not a valid value of '.static::class);
+        }
+
+        $value = $refClass->getConstant($constantName);
 
         return new static($value);
     }
