@@ -50,12 +50,12 @@ trait MakesHttpRequests
         return $this->request('POST', $uri, $parameters);
     }
 
-    protected function getJson(string $uri, $content)
+    protected function getJson(string $uri, $content = '')
     {
         return $this->json('GET', $uri, $content);
     }
 
-    protected function postJson(string $uri, $content): TestResponse
+    protected function postJson(string $uri, $content = ''): TestResponse
     {
         return $this->json('POST', $uri, $content);
     }

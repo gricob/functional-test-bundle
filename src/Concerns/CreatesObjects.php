@@ -27,7 +27,7 @@ trait CreatesObjects
 
         $this->factory = new FactoryMuffin(new RepositoryStore($doctrine->getManager()));
 
-        $this->factory->loadFactories($container->getParameter('kernel.root_dir').'/factories');
+        $this->factory->loadFactories($container->getParameter('functional_test.factories_dir'));
     }
 
     protected function instance(string $entityClass, array $attributes = [])

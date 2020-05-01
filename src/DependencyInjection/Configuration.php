@@ -8,6 +8,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const DEFAULT_FACTORIES_DIR = '%kernel.root_dir%/factories';
+
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('functional_test');
@@ -26,6 +28,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('unused_definitions')
                     ->scalarPrototype()->end()
                 ->end()
+                ->scalarNode('factories_dir')->defaultValue(self::DEFAULT_FACTORIES_DIR)
             ->end();
     }
 
