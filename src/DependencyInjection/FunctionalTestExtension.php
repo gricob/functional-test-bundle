@@ -22,6 +22,11 @@ class FunctionalTestExtension extends Extension
         );
 
         $container->setParameter(
+            'functional_test.factories_dir',
+            $config['factories_dir']
+        );
+
+        $container->setParameter(
             'functional_test.sqlite.backup_file',
             $config['sqlite']['backup_file']
         );

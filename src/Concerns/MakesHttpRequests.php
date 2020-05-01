@@ -45,17 +45,17 @@ trait MakesHttpRequests
         return $this->request('GET', $uri, $queryParameters);
     }
 
-    protected function post(string $uri, $parameters = []): TestResponse
+    protected function post(string $uri, array $parameters = []): TestResponse
     {
         return $this->request('POST', $uri, $parameters);
     }
 
-    protected function getJson(string $uri, $content)
+    protected function getJson(string $uri, array $content = [])
     {
         return $this->json('GET', $uri, $content);
     }
 
-    protected function postJson(string $uri, $content): TestResponse
+    protected function postJson(string $uri, array $content = []): TestResponse
     {
         return $this->json('POST', $uri, $content);
     }
@@ -95,7 +95,7 @@ trait MakesHttpRequests
             ->setContainer($this->getContainer());
     }
 
-    protected function json(string $method, string $uri, $content): TestResponse
+    protected function json(string $method, string $uri, array $content): TestResponse
     {
         return $this->withHeaders([
             'CONTENT_TYPE' => 'application/json',
