@@ -10,6 +10,9 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
+/**
+ * @mixin Response
+ */
 class TestResponse
 {
     /**
