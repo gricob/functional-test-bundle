@@ -5,6 +5,9 @@ namespace Gricob\FunctionalTestBundle\Testing;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * @mixin CommandTester
+ */
 class CommandResult
 {
     protected $commandTester;
