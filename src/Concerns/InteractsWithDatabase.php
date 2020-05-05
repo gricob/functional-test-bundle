@@ -55,7 +55,7 @@ trait InteractsWithDatabase
 
     protected function dropDatabaseSchema(): void
     {
-        if ($this->isSqlite() and @unlink($this->getDatabase())) {
+        if ($this->isSqlite()) {
             return;
         }
 
