@@ -80,3 +80,16 @@ services:
     test.unused_private_service:
         class: Tests\App\Services\UnusedService
         public: false
+
+    Tests\App\Factory\:
+        resource: '../Factory/*'
+        tags:
+            - { name: functional_test.factory }
+
+    Tests\App\Factory\State\PublishedState:
+        tags:
+            - { name: functional_test.state }
+
+functional_test:
+    factory:
+        enabled: true

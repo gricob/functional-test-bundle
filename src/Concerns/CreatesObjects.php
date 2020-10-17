@@ -2,8 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle\Concerns;
 
-use League\FactoryMuffin\FactoryMuffin;
-use League\FactoryMuffin\Stores\RepositoryStore;
+use Gricob\FunctionalTestBundle\Factory\Factory;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -11,38 +10,19 @@ use Symfony\Component\DependencyInjection\Container;
  */
 trait CreatesObjects
 {
-    /**
-     * @var FactoryMuffin
-     */
-    protected $factory = null;
-
-    public function setUpCreatesObjects()
+    protected function instance(string $entityClass, array $attributes = [], $states = [], int $times = null)
     {
-        $container = $this->getContainer();
-        $doctrine = $container->get('doctrine');
-
-        if (!$doctrine) {
-            throw new \LogicException('Doctrine is required to create objects.');
-        }
-
-        $this->factory = new FactoryMuffin(new RepositoryStore($doctrine->getManager()));
-
-        $this->factory->loadFactories($container->getParameter('functional_test.factories_dir'));
+        return $this->getFactory()->instance($entityClass, $attributes, $states, $times);
     }
 
-    protected function instance(string $entityClass, array $attributes = [])
+    protected function create(string $entityClass, array $attributes = [], $states = [], int $times = null)
     {
-        return $this->factory->instance($entityClass, $attributes);
+        return $this->getFactory()->create($entityClass, $attributes, $states, $times);
     }
 
-    protected function create(string $entityClass, array $attributes = [])
+    private function getFactory(): Factory
     {
-        return $this->factory->create($entityClass, $attributes);
-    }
-
-    protected function seed(string $entityClass, int $times, array $attributes = [])
-    {
-        return $this->factory->seed($times, $entityClass, $attributes);
+        return $this->getContainer()->get(Factory::class);
     }
 
     abstract public function getContainer(): Container;
