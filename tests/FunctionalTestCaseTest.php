@@ -8,7 +8,6 @@ use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
-use OutOfBoundsException;
 use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -20,8 +19,8 @@ use Tests\App\Services\UnusedService;
 
 class FunctionalTestCaseTest extends FunctionalTestCase
 {
-    use RefreshDatabase,
-        CreatesObjects;
+    use RefreshDatabase;
+    use CreatesObjects;
 
     protected static function getKernelClass()
     {
@@ -234,24 +233,6 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $container = $this->getContainer();
 
         $this->assertInstanceOf(UnusedService::class, $container->get('test.unused_private_service'));
-    }
-
-    public function testInstanceEntity()
-    {
-        $user = $this->instance(User::class);
-
-        $this->assertNotNull($user);
-        $this->assertInstanceOf(User::class, $user);
-    }
-
-    public function testCreateEntity()
-    {
-        $user = $this->create(User::class);
-
-        $this->assertNotNull($user);
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals('test-username', $user->getUsername());
-        $this->assertDatabaseHas(User::class, ['username' => 'test-username']);
     }
 
     private function getTestFile()

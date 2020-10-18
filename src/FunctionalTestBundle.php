@@ -2,6 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle;
 
+use Gricob\FunctionalTestBundle\DependencyInjection\Compiler\ConfigureFactoryServices;
 use Gricob\FunctionalTestBundle\DependencyInjection\Compiler\PreventRemoveUnusedDefinitions;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,5 +15,6 @@ class FunctionalTestBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new PreventRemoveUnusedDefinitions(), PassConfig::TYPE_BEFORE_REMOVING, -200);
+        $container->addCompilerPass(new ConfigureFactoryServices());
     }
 }
