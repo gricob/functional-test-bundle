@@ -42,6 +42,12 @@ trait InteractsWithDatabase
         $this->schemaTool = new SchemaTool($this->em);
     }
 
+    protected function tearDownInteractsWithDatabase(): void
+    {
+        $this->em = null;
+        gc_collect_cycles();
+    }
+
     protected function createDatabaseSchema(): void
     {
         $this->dropDatabaseSchema();
