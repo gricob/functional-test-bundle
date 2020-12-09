@@ -4,6 +4,7 @@ namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
 use Gricob\FunctionalTestBundle\Testing\CommandResult;
+use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
 use OutOfBoundsException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -51,7 +52,7 @@ trait InteractsWithConsole
         return $this->verbosityLevel ?: VerbosityLevel::normal();
     }
 
-    public function setVerbosityLevel(VerbosityLevel $verbosityLevel): self
+    public function setVerbosityLevel(VerbosityLevel $verbosityLevel): FunctionalTestCase
     {
         $this->verbosityLevel = $verbosityLevel;
 
