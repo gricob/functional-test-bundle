@@ -235,6 +235,13 @@ class FunctionalTestCaseTest extends FunctionalTestCase
         $this->assertInstanceOf(UnusedService::class, $container->get('test.unused_private_service'));
     }
 
+    public function testOnHost()
+    {
+        $this->catchExceptions()->get('/host')->assertNotFound();
+
+        $this->onHost('test.com')->get('/host')->assertOk()->assertSee('test.com');
+    }
+
     private function getTestFile()
     {
         return new UploadedFile(

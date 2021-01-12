@@ -133,6 +133,13 @@ trait MakesHttpRequests
         return $this;
     }
 
+    protected function onHost(string $host): self
+    {
+        $this->server['HTTP_HOST'] = $host;
+
+        return $this;
+    }
+
     protected function click(Link $link): TestResponse
     {
         return $this->request($link->getMethod(), $link->getUri());
