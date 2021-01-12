@@ -41,3 +41,8 @@ test_form:
 test_headers:
     path: /headers
     defaults: { _controller: 'Tests\App\Controller\DefaultController::headers' }
+
+test_host:
+    path: /host
+    host: test.com
+    controller: 'Tests\App\Controller\DefaultController::host'

@@ -98,6 +98,11 @@ class DefaultController extends AbstractController
         return new Response($html);
     }
 
+    public function host(Request $request)
+    {
+        return new Response($request->getHost());
+    }
+
     private function ensureJsonRequest(Request $request)
     {
         if ($request->headers->get('Content-Type') != 'application/json') {
