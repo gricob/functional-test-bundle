@@ -122,7 +122,7 @@ class TestResponse
 
     public function assertSee(string $needle): self
     {
-        PHPUnit::assertContains($needle, $this->baseResponse->getContent());
+        PHPUnit::assertStringContainsString($needle, $this->baseResponse->getContent());
 
         return $this;
     }
@@ -130,7 +130,7 @@ class TestResponse
     public function assertSeeAll(array $needles): self
     {
         foreach ($needles as $needle) {
-            PHPUnit::assertContains($needle, $this->baseResponse->getContent());
+            PHPUnit::assertStringContainsString($needle, $this->baseResponse->getContent());
         }
 
         return $this;
@@ -138,7 +138,7 @@ class TestResponse
 
     public function assertDontSee(string $needle): self
     {
-        PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
+        PHPUnit::assertStringNotContainsString($needle, $this->baseResponse->getContent());
 
         return $this;
     }
@@ -146,7 +146,7 @@ class TestResponse
     public function assertDontSeeAny(array $needles)
     {
         foreach ($needles as $needle) {
-            PHPUnit::assertNotContains($needle, $this->baseResponse->getContent());
+            PHPUnit::assertStringNotContainsString($needle, $this->baseResponse->getContent());
         }
 
         return $this;

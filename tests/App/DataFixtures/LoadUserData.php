@@ -3,7 +3,7 @@
 namespace Tests\App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Tests\App\Entity\User;
 
 class LoadUserData extends Fixture

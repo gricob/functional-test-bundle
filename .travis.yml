@@ -4,6 +4,7 @@ php:
     - 7.2
     - 7.3
     - 7.4
+    - 8.0snapshot
 
 before_script:
     - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --no-interaction
