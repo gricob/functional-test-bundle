@@ -2,7 +2,7 @@
 
 namespace Gricob\FunctionalTestBundle\Constraints;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Constraint\Constraint;
 
 class HasInDatabase extends Constraint

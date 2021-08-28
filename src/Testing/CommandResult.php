@@ -37,7 +37,7 @@ class CommandResult
 
     public function assertSee(string $needle): self
     {
-        PHPUnit::assertContains(
+        PHPUnit::assertStringContainsString(
             $needle,
             $this->commandTester->getDisplay()
         );
