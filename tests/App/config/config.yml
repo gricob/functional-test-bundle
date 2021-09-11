@@ -2,7 +2,7 @@ framework:
     secret: secret
     test: ~
     form: ~
-    router: { resource: "%kernel.root_dir%/../App/routing.yml" }
+    router: { resource: "%kernel.project_dir%/tests/App/routing.yml" }
     profiler:
         only_exceptions: false
         collect: true
@@ -24,7 +24,7 @@ monolog:
 
 twig:
     strict_variables: "%kernel.debug%"
-    paths: ["%kernel.root_dir%/../App/templates"]
+    paths: ["%kernel.project_dir%/tests/App/templates"]
 
 doctrine:
     dbal:
@@ -39,8 +39,9 @@ doctrine:
                 mappings:
                     TestAppBundle:
                         type: annotation
-                        dir: "%kernel.root_dir%/../App/Entity"
+                        dir: "%kernel.project_dir%/tests/App/Entity"
                         prefix: 'Tests\App\Entity'
+                        is_bundle: false
 
 security:
     encoders:

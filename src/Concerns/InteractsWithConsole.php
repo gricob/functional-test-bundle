@@ -4,25 +4,19 @@ namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
 use Gricob\FunctionalTestBundle\Testing\CommandResult;
-use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
-use OutOfBoundsException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 trait InteractsWithConsole
 {
-    /** @var VerbosityLevel */
-    protected $verbosityLevel;
+    protected ?VerbosityLevel $verbosityLevel = null;
 
-    /** @var bool */
-    protected $decorated = false;
+    protected bool $decorated = false;
 
     protected function runCommand(string $name, array $parameters = [], array $inputs = null): CommandResult
     {
-        $this->ensureKernelBoot();
-
-        $application = new Application($this->getContainer()->get('kernel'));
+        $application = new Application(static::getContainer()->get('kernel'));
 
         $command = $application->find($name);
 
@@ -52,7 +46,7 @@ trait InteractsWithConsole
         return $this->verbosityLevel ?: VerbosityLevel::normal();
     }
 
-    public function setVerbosityLevel(VerbosityLevel $verbosityLevel): FunctionalTestCase
+    public function setVerbosityLevel(VerbosityLevel $verbosityLevel): self
     {
         $this->verbosityLevel = $verbosityLevel;
 
@@ -75,7 +69,5 @@ trait InteractsWithConsole
         $this->decorated = $decorated;
     }
 
-    abstract protected function getContainer(): Container;
-
-    abstract protected function ensureKernelBoot(): void;
+    abstract protected static function getContainer(): ContainerInterface;
 }

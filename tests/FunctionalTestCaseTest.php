@@ -4,6 +4,9 @@ namespace Tests;
 
 use Exception;
 use Gricob\FunctionalTestBundle\Concerns\CreatesObjects;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithConsole;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
+use Gricob\FunctionalTestBundle\Concerns\MakesHttpRequests;
 use Gricob\FunctionalTestBundle\Enums\VerbosityLevel;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Gricob\FunctionalTestBundle\Testing\FunctionalTestCase;
@@ -19,6 +22,9 @@ use Tests\App\Services\UnusedService;
 
 class FunctionalTestCaseTest extends FunctionalTestCase
 {
+    use InteractsWithDatabase;
+    use InteractsWithConsole;
+    use MakesHttpRequests;
     use RefreshDatabase;
     use CreatesObjects;
 

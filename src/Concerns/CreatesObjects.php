@@ -3,7 +3,7 @@
 namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Factory\Factory;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @author Gerard Rico <grico@wearemarketing.com>
@@ -25,5 +25,5 @@ trait CreatesObjects
         return $this->getContainer()->get(Factory::class);
     }
 
-    abstract public function getContainer(): Container;
+    abstract public static function getContainer(): ContainerInterface;
 }

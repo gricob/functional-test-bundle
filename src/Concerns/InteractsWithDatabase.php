@@ -7,16 +7,14 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Driver\AbstractSQLiteDriver;
 use Doctrine\ORM\Tools\SchemaTool;
-use Gricob\FunctionalTestBundle\Enums\Events;
-use Gricob\FunctionalTestBundle\Event\SchemaEvent;
 use Gricob\FunctionalTestBundle\Constraints\HasInDatabase;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use PHPUnit\Framework\Assert as PHPUnit;
 use PHPUnit\Framework\Constraint\LogicalNot as ReverseConstraint;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 trait InteractsWithDatabase
 {
@@ -37,7 +35,7 @@ trait InteractsWithDatabase
 
     protected function setUpInteractsWithDatabase(): void
     {
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
+        $this->em = static::getContainer()->get('doctrine')->getManager();
 
         $this->schemaTool = new SchemaTool($this->em);
     }
@@ -79,7 +77,7 @@ trait InteractsWithDatabase
 
     protected function getFixtureLoader(array $fixtureClasses): Loader
     {
-        $loader = new ContainerAwareLoader($this->getContainer());
+        $loader = new ContainerAwareLoader(static::getContainer());
 
         foreach ($fixtureClasses as $className) {
             $this->loadFixtureClass($loader, $className);
@@ -92,8 +90,8 @@ trait InteractsWithDatabase
     {
         $fixture = null;
 
-        if ($this->getContainer()->has($className)) {
-            $fixture = $this->getContainer()->get($className);
+        if (static::getContainer()->has($className)) {
+            $fixture = static::getContainer()->get($className);
         } else {
             $fixture = new $className();
         }
@@ -170,7 +168,7 @@ trait InteractsWithDatabase
 
     private function getSqliteBackupFile(): string
     {
-        return $this->getContainer()->getParameter('functional_test.sqlite.backup_file');
+        return static::getContainer()->getParameter('functional_test.sqlite.backup_file');
     }
 
     private function isSqlite(): bool
@@ -183,5 +181,5 @@ trait InteractsWithDatabase
         return $this->em->getConnection()->getDatabase();
     }
 
-    abstract protected function getContainer(): Container;
+    abstract protected static function getContainer(): ContainerInterface;
 }

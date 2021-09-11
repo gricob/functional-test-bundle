@@ -27,5 +27,7 @@ class TestCommand extends Command
 
             $output->writeln('You are ' . $response);
         }
+
+        return Command::SUCCESS;
     }
 }

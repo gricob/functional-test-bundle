@@ -2,23 +2,13 @@
 
 namespace Gricob\FunctionalTestBundle\Testing;
 
-use Gricob\FunctionalTestBundle\Concerns\InteractsWithConsole;
 use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
-use Gricob\FunctionalTestBundle\Concerns\MakesHttpRequests;
-use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class FunctionalTestCase extends BaseWebTestCase
+class FunctionalTestCase extends KernelTestCase
 {
-    use MakesHttpRequests,
-        InteractsWithDatabase,
-        InteractsWithConsole;
-
-    /**
-     * @var array
-     */
-    private $kernelOptions = [];
+    private static array $kernelOptions = [];
 
     protected function setUp(): void
     {
@@ -92,38 +82,21 @@ class FunctionalTestCase extends BaseWebTestCase
 
     protected function setEnvironment(string $env): self
     {
-        if (static::$kernel and static::$kernel->getEnvironment() != $env) {
+        if (static::$booted and static::$kernel->getEnvironment() != $env) {
             $this->ensureKernelShutdown();
         }
 
-        $this->kernelOptions['environment'] = $env;
+        static::$kernelOptions['environment'] = $env;
 
         return $this;
     }
 
-    protected function getContainer(): Container
+    protected static function getContainer(): ContainerInterface
     {
-        $this->ensureKernelBoot();
-
-        return static::$kernel->getContainer();
-    }
-
-    protected function getTestContainer(): TestContainer
-    {
-        $this->ensureKernelBoot();
-
-        return static::$container;
-    }
-
-    protected function ensureKernelBoot(): void
-    {
-        if (!static::$container) {
-            $this->bootKernel($this->getKernelOptions());
+        if (!static::$booted) {
+            static::bootKernel(static::$kernelOptions);
         }
-    }
 
-    protected function getKernelOptions(): array
-    {
-        return $this->kernelOptions;
+        return parent::getContainer();
     }
 }

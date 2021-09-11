@@ -4,8 +4,9 @@ namespace Gricob\FunctionalTestBundle\Concerns;
 
 use Gricob\FunctionalTestBundle\Testing\TestResponse;
 use Illuminate\Support\Str;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 trait MakesHttpRequests
 {
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -168,7 +169,7 @@ trait MakesHttpRequests
 
     protected function initClient()
     {
-        $this->client = static::createClient($this->getKernelOptions());
+        $this->client = static::getContainer()->get('test.client');
 
         if ($this->firewallLogins) {
             $options = $this->client->getContainer()->getParameter('session.storage.options');
@@ -204,5 +205,5 @@ trait MakesHttpRequests
         );
     }
 
-    abstract protected function getKernelOptions(): array;
+    abstract protected static function getContainer(): ContainerInterface;
 }

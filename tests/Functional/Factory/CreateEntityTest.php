@@ -3,6 +3,7 @@
 namespace Tests\Functional\Factory;
 
 use Gricob\FunctionalTestBundle\Concerns\CreatesObjects;
+use Gricob\FunctionalTestBundle\Concerns\InteractsWithDatabase;
 use Gricob\FunctionalTestBundle\Testing\RefreshDatabase;
 use Tests\App\Entity\Article;
 use Tests\Functional\TestCase;
@@ -12,6 +13,7 @@ use Tests\Functional\TestCase;
  */
 class CreateEntityTest extends TestCase
 {
+    use InteractsWithDatabase;
     use RefreshDatabase;
     use CreatesObjects;
 
